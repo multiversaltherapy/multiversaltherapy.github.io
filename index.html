@@ -3,657 +3,86 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#08080b">
+  <meta name="theme-color" content="#100f0e">
   <meta name="color-scheme" content="dark">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta name="description" content="Official links for Multiversal Therapy — what if fictional characters had therapy?">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https://avatars.githubusercontent.com data:; style-src 'nonce-c216-links-v1'; script-src 'nonce-c216-links-v1'; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
-
-  <meta property="og:type" content="profile">
-  <meta property="og:title" content="Multiversal Therapy | Official Links">
-  <meta property="og:description" content="What if fictional characters had therapy?">
-  <meta property="og:url" content="https://multiversaltherapy.github.io/youtube-app-opener/">
-  <meta property="og:image" content="https://avatars.githubusercontent.com/u/281447626?v=4">
-  <meta property="og:image:alt" content="Multiversal Therapy profile image">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Multiversal Therapy | Official Links">
-  <meta name="twitter:description" content="What if fictional characters had therapy?">
-  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/281447626?v=4">
-
-  <link rel="canonical" href="https://multiversaltherapy.github.io/youtube-app-opener/">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2308080b'/%3E%3Cpath d='M16 45V19h7l9 13 9-13h7v26h-8V31l-8 11-8-11v14z' fill='%23e8c98b'/%3E%3C/svg%3E">
-  <title>Multiversal Therapy | Official Links</title>
-
-  <style nonce="c216-links-v1">
-    :root {
-      color-scheme: dark;
-      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --bg: #08080b;
-      --surface: rgba(23, 23, 29, 0.76);
-      --surface-strong: rgba(31, 31, 39, 0.94);
-      --line: rgba(255, 255, 255, 0.11);
-      --line-strong: rgba(232, 201, 139, 0.36);
-      --text: #f7f5f0;
-      --muted: #aaa7a2;
-      --gold: #e8c98b;
-      --gold-soft: #f4dfb4;
-      --shadow: 0 26px 80px rgba(0, 0, 0, 0.48);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      min-width: 320px;
-      background: var(--bg);
-      scroll-behavior: smooth;
-    }
-
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'nonce-mt-legacy-v1'; script-src 'nonce-mt-legacy-v1'; base-uri 'none'; form-action 'none'; object-src 'none'; upgrade-insecure-requests">
+  <noscript><meta http-equiv="refresh" content="0;url=https://multiversaltherapy.github.io/"></noscript>
+  <title>Opening Multiversal Therapy</title>
+  <style nonce="mt-legacy-v1">
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
       min-height: 100svh;
-      overflow-x: hidden;
-      background:
-        radial-gradient(circle at 14% 8%, rgba(116, 29, 43, 0.34), transparent 32rem),
-        radial-gradient(circle at 88% 18%, rgba(31, 75, 112, 0.25), transparent 30rem),
-        radial-gradient(circle at 50% 110%, rgba(100, 59, 120, 0.18), transparent 28rem),
-        var(--bg);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-
-    body::before,
-    body::after {
-      position: fixed;
-      z-index: -1;
-      border-radius: 50%;
-      content: "";
-      pointer-events: none;
-    }
-
-    body::before {
-      top: -17rem;
-      left: 50%;
-      width: 38rem;
-      height: 38rem;
-      border: 1px solid rgba(232, 201, 139, 0.1);
-      box-shadow:
-        0 0 0 4rem rgba(232, 201, 139, 0.018),
-        0 0 0 9rem rgba(232, 201, 139, 0.012);
-      transform: translateX(-50%);
-    }
-
-    body::after {
-      right: -8rem;
-      bottom: -11rem;
-      width: 23rem;
-      height: 23rem;
-      border: 1px solid rgba(117, 182, 213, 0.09);
-      box-shadow: 0 0 90px rgba(117, 182, 213, 0.055);
-    }
-
-    a {
-      color: inherit;
-    }
-
-    .page-shell {
       display: grid;
-      min-height: 100vh;
-      min-height: 100svh;
       place-items: center;
-      padding:
-        max(32px, env(safe-area-inset-top))
-        max(18px, env(safe-area-inset-right))
-        max(28px, env(safe-area-inset-bottom))
-        max(18px, env(safe-area-inset-left));
-    }
-
-    .profile-card {
-      position: relative;
-      width: min(100%, 520px);
-      padding: clamp(28px, 7vw, 46px);
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 32px;
-      background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.055), transparent 34%),
-        var(--surface);
-      box-shadow: var(--shadow);
-      isolation: isolate;
-      -webkit-backdrop-filter: blur(22px);
-      backdrop-filter: blur(22px);
-    }
-
-    .profile-card::before {
-      position: absolute;
-      z-index: -1;
-      inset: 0;
-      border-radius: inherit;
-      background:
-        linear-gradient(90deg, transparent 0 48%, rgba(255, 255, 255, 0.025) 50%, transparent 52%),
-        repeating-linear-gradient(0deg, transparent 0 34px, rgba(255, 255, 255, 0.018) 35px);
-      content: "";
-      opacity: 0.7;
-      pointer-events: none;
-    }
-
-    .eyebrow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      margin: 0 0 22px;
-      color: var(--gold);
-      font-size: 0.7rem;
-      font-weight: 800;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow::before,
-    .eyebrow::after {
-      width: 24px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, currentColor);
-      content: "";
-      opacity: 0.7;
-    }
-
-    .eyebrow::after {
-      transform: scaleX(-1);
-    }
-
-    .identity {
+      padding: 24px;
+      background: radial-gradient(circle at 50% 20%, rgba(223, 160, 87, 0.18), transparent 25rem), #100f0e;
+      color: #f4eee6;
       text-align: center;
     }
-
-    .avatar-shell {
-      position: relative;
-      width: 112px;
-      height: 112px;
-      margin: 0 auto 20px;
-      padding: 4px;
-      border: 1px solid var(--line-strong);
-      border-radius: 50%;
-      background: linear-gradient(145deg, rgba(232, 201, 139, 0.22), rgba(255, 255, 255, 0.035));
-      box-shadow:
-        0 0 0 7px rgba(232, 201, 139, 0.035),
-        0 16px 42px rgba(0, 0, 0, 0.5);
-    }
-
-    .avatar-fallback,
-    .avatar {
-      position: absolute;
-      inset: 4px;
-      width: calc(100% - 8px);
-      height: calc(100% - 8px);
-      border-radius: 50%;
-    }
-
-    .avatar-fallback {
+    main { width: min(100%, 460px); }
+    .mark {
       display: grid;
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 22px;
       place-items: center;
-      background: linear-gradient(145deg, #25232b, #111116);
-      color: var(--gold);
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 2.3rem;
+      border: 2px solid #dfa057;
+      border-radius: 50%;
+      color: #f4eee6;
+      font-family: ui-serif, Georgia, serif;
+      font-size: 2rem;
       font-weight: 700;
+      box-shadow: 0 0 36px rgba(223, 160, 87, 0.16);
     }
-
-    .avatar {
-      display: block;
-      object-fit: cover;
-    }
-
-    h1 {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2rem, 8vw, 2.85rem);
-      font-weight: 650;
-      letter-spacing: -0.035em;
-      line-height: 1;
-    }
-
-    .handle {
-      margin: 10px 0 0;
-      color: var(--gold-soft);
-      font-size: 0.85rem;
-      font-weight: 750;
-      letter-spacing: 0.055em;
-    }
-
-    .tagline {
-      max-width: 370px;
-      margin: 17px auto 0;
-      color: var(--text);
-      font-size: clamp(1rem, 3.8vw, 1.12rem);
-      font-weight: 550;
-      letter-spacing: -0.01em;
-      line-height: 1.5;
-    }
-
-    .subline {
-      margin: 7px 0 0;
-      color: var(--muted);
-      font-size: 0.82rem;
-      line-height: 1.5;
-    }
-
-    .links {
-      display: grid;
-      gap: 12px;
-      margin-top: 30px;
-    }
-
-    .social-link {
-      --platform: var(--gold);
-      position: relative;
-      display: grid;
-      grid-template-columns: 46px minmax(0, 1fr) 24px;
-      gap: 13px;
-      align-items: center;
-      min-height: 72px;
-      padding: 11px 16px 11px 12px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 19px;
-      background: var(--surface-strong);
-      text-decoration: none;
-      transition:
-        border-color 180ms ease,
-        box-shadow 180ms ease,
-        transform 180ms ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .social-link::before {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      width: 3px;
-      background: var(--platform);
-      box-shadow: 0 0 24px var(--platform);
-      content: "";
-      opacity: 0.82;
-    }
-
-    .social-link::after {
-      position: absolute;
-      top: -70%;
-      right: -34%;
-      width: 220px;
-      height: 160px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--platform), transparent 66%);
-      content: "";
-      opacity: 0.045;
-      pointer-events: none;
-      transition: opacity 180ms ease;
-    }
-
-    .social-link:hover {
-      border-color: color-mix(in srgb, var(--platform) 46%, transparent);
-      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
-      transform: translateY(-2px);
-    }
-
-    .social-link:hover::after {
-      opacity: 0.09;
-    }
-
-    .social-link:active {
-      transform: translateY(0) scale(0.99);
-    }
-
-    .social-link:focus-visible {
-      outline: 3px solid color-mix(in srgb, var(--platform) 64%, white);
-      outline-offset: 3px;
-    }
-
-    .youtube {
-      --platform: #ff4d55;
-    }
-
-    .instagram {
-      --platform: #d975c7;
-    }
-
-    .tiktok {
-      --platform: #55e5e1;
-    }
-
-    .platform-icon {
-      display: grid;
-      width: 46px;
-      height: 46px;
-      place-items: center;
-      border: 1px solid color-mix(in srgb, var(--platform) 28%, transparent);
-      border-radius: 14px;
-      background: color-mix(in srgb, var(--platform) 10%, transparent);
-      color: var(--platform);
-    }
-
-    .platform-icon svg {
-      width: 23px;
-      height: 23px;
-      fill: currentColor;
-    }
-
-    .link-copy {
-      min-width: 0;
-    }
-
-    .link-title,
-    .link-handle {
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .link-title {
-      font-size: 0.98rem;
-      font-weight: 800;
-      letter-spacing: -0.012em;
-    }
-
-    .link-handle {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .arrow {
-      display: grid;
-      width: 24px;
-      height: 24px;
-      place-items: center;
-      color: rgba(255, 255, 255, 0.65);
-      transition: color 180ms ease, transform 180ms ease;
-    }
-
-    .arrow svg {
-      width: 18px;
-      height: 18px;
-      fill: none;
-      stroke: currentColor;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-width: 1.8;
-    }
-
-    .social-link:hover .arrow {
-      color: var(--text);
-      transform: translateX(2px);
-    }
-
-    .app-note {
-      display: flex;
+    h1 { margin: 0; font-size: 1.55rem; }
+    p { margin: 12px 0 0; color: #aba79f; line-height: 1.55; }
+    a {
+      display: inline-flex;
+      min-height: 48px;
       align-items: center;
       justify-content: center;
-      gap: 7px;
-      margin: 19px 0 0;
-      color: #88858a;
-      font-size: 0.72rem;
-      line-height: 1.45;
-      text-align: center;
+      margin-top: 24px;
+      padding: 12px 20px;
+      border: 1px solid #dfa057;
+      border-radius: 14px;
+      background: rgba(223, 160, 87, 0.1);
+      color: #f4eee6;
+      font-weight: 800;
+      text-decoration: none;
     }
-
-    .app-note svg {
-      width: 14px;
-      height: 14px;
-      flex: 0 0 auto;
-      fill: none;
-      stroke: currentColor;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-width: 1.8;
-    }
-
-    .footer {
-      margin-top: 26px;
-      color: #747177;
-      font-size: 0.66rem;
-      font-weight: 650;
-      letter-spacing: 0.12em;
-      text-align: center;
-      text-transform: uppercase;
-    }
-
-    .reveal {
-      animation: rise-in 650ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
-    }
-
-    .links .social-link:nth-child(1) {
-      animation-delay: 100ms;
-    }
-
-    .links .social-link:nth-child(2) {
-      animation-delay: 170ms;
-    }
-
-    .links .social-link:nth-child(3) {
-      animation-delay: 240ms;
-    }
-
-    @keyframes rise-in {
-      from {
-        opacity: 0;
-        transform: translateY(14px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 420px) {
-      .page-shell {
-        padding-right: 12px;
-        padding-left: 12px;
-      }
-
-      .profile-card {
-        padding: 27px 18px 24px;
-        border-radius: 26px;
-      }
-
-      .avatar-shell {
-        width: 100px;
-        height: 100px;
-      }
-
-      .social-link {
-        grid-template-columns: 43px minmax(0, 1fr) 21px;
-        min-height: 68px;
-        border-radius: 17px;
-      }
-
-      .platform-icon {
-        width: 43px;
-        height: 43px;
-        border-radius: 13px;
-      }
-    }
-
-    @media (min-width: 760px) {
-      .profile-card {
-        margin: 30px 0;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    @supports not (color: color-mix(in srgb, white, black)) {
-      .social-link:hover {
-        border-color: rgba(232, 201, 139, 0.46);
-      }
-
-      .social-link:focus-visible {
-        outline-color: var(--gold);
-      }
-
-      .platform-icon {
-        border-color: rgba(255, 255, 255, 0.14);
-        background: rgba(255, 255, 255, 0.05);
-      }
-    }
+    a:focus-visible { outline: 3px solid #f0c17f; outline-offset: 3px; }
   </style>
 </head>
-
 <body>
-  <main class="page-shell">
-    <article class="profile-card reveal" aria-labelledby="profile-title">
-      <p class="eyebrow">Official links</p>
-
-      <header class="identity">
-        <div class="avatar-shell">
-          <span class="avatar-fallback" aria-hidden="true">M</span>
-          <img
-            class="avatar"
-            src="https://avatars.githubusercontent.com/u/281447626?v=4"
-            width="104"
-            height="104"
-            alt="Multiversal Therapy profile image"
-            decoding="async"
-          >
-        </div>
-
-        <h1 id="profile-title">Multiversal Therapy</h1>
-        <p class="handle">@multiversaltherapy</p>
-        <p class="tagline">What if fictional characters had therapy?</p>
-        <p class="subline">Stories, psychology, and the choices that could change everything.</p>
-      </header>
-
-      <nav class="links" aria-label="Multiversal Therapy profiles">
-        <a
-          class="social-link youtube reveal"
-          id="youtube-link"
-          href="https://www.youtube.com/@multiversaltherapy"
-          rel="me external"
-          aria-label="Open Multiversal Therapy on YouTube"
-          aria-describedby="app-note"
-        >
-          <span class="platform-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/>
-            </svg>
-          </span>
-          <span class="link-copy">
-            <span class="link-title">Watch on YouTube</span>
-            <span class="link-handle">@multiversaltherapy</span>
-          </span>
-          <span class="arrow" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
-          </span>
-        </a>
-
-        <a
-          class="social-link instagram reveal"
-          href="https://www.instagram.com/multiversaltherapy/"
-          rel="me external"
-          aria-label="Open Multiversal Therapy on Instagram"
-          aria-describedby="app-note"
-        >
-          <span class="platform-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M7.7 2h8.6A5.7 5.7 0 0 1 22 7.7v8.6a5.7 5.7 0 0 1-5.7 5.7H7.7A5.7 5.7 0 0 1 2 16.3V7.7A5.7 5.7 0 0 1 7.7 2Zm-.2 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.8 1.5a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/>
-            </svg>
-          </span>
-          <span class="link-copy">
-            <span class="link-title">Follow on Instagram</span>
-            <span class="link-handle">@multiversaltherapy</span>
-          </span>
-          <span class="arrow" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
-          </span>
-        </a>
-
-        <a
-          class="social-link tiktok reveal"
-          href="https://www.tiktok.com/@multiversaltherapy"
-          rel="me external"
-          aria-label="Open Multiversal Therapy on TikTok"
-          aria-describedby="app-note"
-        >
-          <span class="platform-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M15.6 2c.3 2.3 1.7 3.7 4.4 3.9v3.5a8.6 8.6 0 0 1-4.4-1.1v6.5a7.2 7.2 0 1 1-6.2-7.1v3.6a3.7 3.7 0 1 0 2.6 3.5V2h3.6Z"/>
-            </svg>
-          </span>
-          <span class="link-copy">
-            <span class="link-title">Follow on TikTok</span>
-            <span class="link-handle">@multiversaltherapy</span>
-          </span>
-          <span class="arrow" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
-          </span>
-        </a>
-      </nav>
-
-      <p class="app-note" id="app-note">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 5h4M11 19h2"/></svg>
-        On mobile, links open in the app when available.
-      </p>
-
-      <footer class="footer">Fiction · Psychology · Alternate paths</footer>
-    </article>
+  <main>
+    <div class="mark" aria-hidden="true">M</div>
+    <h1 id="headline">Opening Multiversal Therapy…</h1>
+    <p id="message">If the page does not open automatically, use the button below.</p>
+    <a id="continue-link" href="https://multiversaltherapy.github.io/">Continue</a>
   </main>
-
-  <script type="application/ld+json" nonce="c216-links-v1">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Multiversal Therapy",
-      "url": "https://multiversaltherapy.github.io/youtube-app-opener/",
-      "description": "What if fictional characters had therapy?",
-      "sameAs": [
-        "https://www.youtube.com/@multiversaltherapy",
-        "https://www.instagram.com/multiversaltherapy/",
-        "https://www.tiktok.com/@multiversaltherapy"
-      ]
-    }
-  </script>
-
-  <script nonce="c216-links-v1">
+  <script nonce="mt-legacy-v1">
     (() => {
       "use strict";
 
+      const rootUrl = "https://multiversaltherapy.github.io/";
       const videoId = new URLSearchParams(window.location.search).get("v") || "";
+      const hasVideo = /^[A-Za-z0-9_-]{11}$/.test(videoId);
+      const destination = hasVideo
+        ? "https://www.youtube.com/watch?v=" + encodeURIComponent(videoId)
+        : rootUrl;
+      const link = document.getElementById("continue-link");
 
-      if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
-        return;
-      }
-
-      const videoUrl = "https://www.youtube.com/watch?v=" + encodeURIComponent(videoId);
-      const youtubeLink = document.getElementById("youtube-link");
-
-      youtubeLink.href = videoUrl;
-      youtubeLink.setAttribute("aria-label", "Open this video on YouTube");
-      youtubeLink.querySelector(".link-title").textContent = "Watch this video on YouTube";
+      link.href = destination;
+      link.textContent = hasVideo ? "Watch on YouTube" : "Open Multiversal Therapy";
 
       window.setTimeout(() => {
-        window.location.assign(videoUrl);
-      }, 180);
+        window.location.replace(destination);
+      }, 160);
     })();
   </script>
 </body>
