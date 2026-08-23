@@ -7,7 +7,7 @@
   <meta name="color-scheme" content="dark">
   <meta name="referrer" content="no-referrer">
   <meta name="description" content="Official Multiversal Therapy links. Psychological character studies across worlds, choices, and consequences.">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'sha256-OQhm74mFAs31wNDjCUBrx69J7ZrIb3lKkW88p4ynZkg='; style-src-attr 'none'; script-src 'sha256-kPkYlgFsLrnZXfc1mkcHCrgSXVYz2ak+VkkraTK34M8=' 'sha256-Dj16uriHryvRcxo+TxZjlCd5uP/gpYzUNT5SP/x9r+8='; script-src-attr 'none'; connect-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'sha256-QonEb9izHNdSUuLkKWtkkehCYBhRgnoWlrAvuyj12nY='; style-src-attr 'none'; script-src 'sha256-kPkYlgFsLrnZXfc1mkcHCrgSXVYz2ak+VkkraTK34M8=' 'sha256-MBNnrkKmbnHYPkZQvWNh3LoOrxEDJkSCPouhJ9bEaXY='; script-src-attr 'none'; connect-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Multiversal Therapy">
@@ -464,6 +464,90 @@
       stroke-width: 1.8;
     }
 
+    .in-app-note {
+      margin: 12px 0 0;
+      padding: 10px 12px;
+      border: 1px solid rgba(223, 160, 87, 0.2);
+      border-radius: 12px;
+      background: rgba(223, 160, 87, 0.055);
+      color: var(--muted);
+      font-size: 0.7rem;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .in-app-note[hidden],
+    .app-fallback[hidden] {
+      display: none;
+    }
+
+    .app-fallback {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid rgba(223, 160, 87, 0.32);
+      border-radius: 16px;
+      background: rgba(16, 15, 14, 0.72);
+      box-shadow: inset 0 1px 0 rgba(244, 238, 230, 0.035);
+      text-align: left;
+    }
+
+    .fallback-title {
+      margin: 0;
+      color: var(--cream);
+      font-size: 0.86rem;
+      font-weight: 820;
+    }
+
+    .fallback-copy,
+    .browser-help {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 0.7rem;
+      line-height: 1.55;
+    }
+
+    .fallback-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 13px;
+    }
+
+    .fallback-link {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(244, 238, 230, 0.035);
+      color: var(--cream);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .fallback-link.primary {
+      border-color: var(--line-strong);
+      background: rgba(223, 160, 87, 0.11);
+    }
+
+    .fallback-link:hover {
+      border-color: var(--gold-light);
+      background: rgba(223, 160, 87, 0.14);
+    }
+
+    .fallback-link:focus-visible {
+      outline: 3px solid var(--gold-light);
+      outline-offset: 3px;
+    }
+
+    .browser-help {
+      color: var(--gold-light);
+    }
+
     .footer {
       padding-top: 21px;
       margin-top: 24px;
@@ -601,6 +685,10 @@
       .link-title {
         font-size: 0.91rem;
       }
+
+      .fallback-actions {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (min-width: 760px) {
@@ -687,6 +775,7 @@
         <a
           class="social-link youtube primary reveal"
           id="youtube-link"
+          data-platform="youtube"
           href="https://www.youtube.com/@multiversaltherapy"
           rel="me external"
           aria-label="Watch full videos by Multiversal Therapy on YouTube"
@@ -705,6 +794,7 @@
 
         <a
           class="social-link instagram reveal"
+          data-platform="instagram"
           href="https://www.instagram.com/multiversaltherapy/"
           rel="me external"
           aria-label="Follow Multiversal Therapy on Instagram"
@@ -722,6 +812,7 @@
 
         <a
           class="social-link tiktok reveal"
+          data-platform="tiktok"
           href="https://www.tiktok.com/@multiversaltherapy"
           rel="me external"
           aria-label="Watch short analyses by Multiversal Therapy on TikTok"
@@ -740,8 +831,24 @@
 
       <p class="mobile-note" id="mobile-note">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 5h4M11 19h2"/></svg>
-        On mobile, links open in the app when available.
+        On mobile, each button tries to open the installed app directly.
       </p>
+
+      <p class="in-app-note" id="in-app-note" hidden>
+        You’re viewing this page inside an in-app browser. Tap a platform once to hand the link to its installed app.
+      </p>
+
+      <section class="app-fallback" id="app-fallback" aria-live="polite" hidden>
+        <p class="fallback-title" id="fallback-title">The app did not open.</p>
+        <p class="fallback-copy" id="fallback-copy">The in-app browser may have blocked the handoff.</p>
+        <div class="fallback-actions">
+          <a class="fallback-link primary" id="retry-app-link" href="/">Try App Again</a>
+          <a class="fallback-link" id="open-web-link" href="/" rel="external noreferrer">Continue on Web</a>
+        </div>
+        <p class="browser-help" id="external-browser-help" hidden>
+          Still here? In Instagram, tap ⋮ and choose “Open in external browser,” then tap the platform again.
+        </p>
+      </section>
 
       <footer class="footer">
         <p>Fictional character analysis for education and entertainment — not mental-health advice.</p>
@@ -780,9 +887,142 @@
       "use strict";
 
       const canonicalUrl = "https://multiversaltherapy.github.io/";
+      const youtubeChannelId = "UCPO0-IQp1HNt39COoYquIGg";
+      const tiktokUserId = "7662102949010785301";
+      const params = new URLSearchParams(window.location.search);
+      const requestedVideoId = params.get("v") || "";
+      const videoId = /^[A-Za-z0-9_-]{11}$/.test(requestedVideoId)
+        ? requestedVideoId
+        : "";
+      const userAgent = navigator.userAgent || "";
+      const isAndroid = /Android/i.test(userAgent);
+      const isIOS = /iPhone|iPad|iPod/i.test(userAgent)
+        || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      const isMobile = isAndroid || isIOS;
+      const isInAppBrowser = /Instagram|FBAN|FBAV|TikTok|musical_ly|BytedanceWebview/i.test(userAgent);
       const shareButton = document.getElementById("share-button");
       const shareStatus = document.getElementById("share-status");
-      const videoId = new URLSearchParams(window.location.search).get("v") || "";
+      const inAppNote = document.getElementById("in-app-note");
+      const fallbackPanel = document.getElementById("app-fallback");
+      const fallbackTitle = document.getElementById("fallback-title");
+      const fallbackCopy = document.getElementById("fallback-copy");
+      const retryAppLink = document.getElementById("retry-app-link");
+      const openWebLink = document.getElementById("open-web-link");
+      const externalBrowserHelp = document.getElementById("external-browser-help");
+      let fallbackTimer = 0;
+
+      const createFallbackUrl = (platform) => {
+        const url = new URL(canonicalUrl);
+        url.searchParams.set("fallback", platform);
+
+        if (platform === "youtube" && videoId) {
+          url.searchParams.set("v", videoId);
+        }
+
+        return url.href;
+      };
+
+      const createAndroidIntent = (deepLink, packageName, fallbackUrl) => {
+        const schemeMarker = deepLink.indexOf("://");
+        const scheme = deepLink.slice(0, schemeMarker);
+        const target = deepLink.slice(schemeMarker + 3);
+
+        return "intent://" + target
+          + "#Intent;scheme=" + scheme
+          + ";package=" + packageName
+          + ";S.browser_fallback_url=" + encodeURIComponent(fallbackUrl)
+          + ";end";
+      };
+
+      const youtubeWebUrl = videoId
+        ? "https://www.youtube.com/watch?v=" + encodeURIComponent(videoId)
+        : "https://www.youtube.com/channel/" + youtubeChannelId;
+      const youtubeDeepLink = "vnd.youtube://" + youtubeWebUrl.slice("https://".length)
+        + (youtubeWebUrl.includes("?") ? "&" : "?")
+        + "feature=applinks";
+      const instagramWebUrl = "https://www.instagram.com/multiversaltherapy/";
+      const instagramDeepLink = "instagram://user?username=multiversaltherapy";
+      const tiktokWebUrl = "https://www.tiktok.com/@multiversaltherapy";
+      const tiktokDeepLink = "snssdk1233://user/profile/" + tiktokUserId
+        + "?params_url=" + encodeURIComponent(tiktokWebUrl)
+        + "&refer=web";
+
+      const routes = {
+        youtube: {
+          name: "YouTube",
+          web: youtubeWebUrl,
+          deep: youtubeDeepLink,
+          android: createAndroidIntent(
+            youtubeDeepLink,
+            "com.google.android.youtube",
+            createFallbackUrl("youtube")
+          )
+        },
+        instagram: {
+          name: "Instagram",
+          web: instagramWebUrl,
+          deep: instagramDeepLink,
+          android: createAndroidIntent(
+            instagramDeepLink,
+            "com.instagram.android",
+            createFallbackUrl("instagram")
+          )
+        },
+        tiktok: {
+          name: "TikTok",
+          web: tiktokWebUrl,
+          deep: tiktokDeepLink,
+          android: createAndroidIntent(
+            tiktokDeepLink,
+            "com.zhiliaoapp.musically",
+            createFallbackUrl("tiktok")
+          )
+        }
+      };
+
+      const targetForDevice = (route) => {
+        if (isAndroid) {
+          return route.android;
+        }
+
+        if (isIOS) {
+          return route.deep;
+        }
+
+        return route.web;
+      };
+
+      const clearFallbackTimer = () => {
+        if (fallbackTimer) {
+          window.clearTimeout(fallbackTimer);
+          fallbackTimer = 0;
+        }
+      };
+
+      const showFallback = (route) => {
+        clearFallbackTimer();
+        fallbackTitle.textContent = route.name + " app did not open.";
+        fallbackCopy.textContent = isInAppBrowser
+          ? "The in-app browser may have blocked the handoff to " + route.name + "."
+          : "The app may not be installed or the operating system may have blocked the handoff.";
+        retryAppLink.href = targetForDevice(route);
+        retryAppLink.textContent = "Try " + route.name + " App Again";
+        openWebLink.href = route.web;
+        externalBrowserHelp.hidden = !isInAppBrowser;
+        fallbackPanel.hidden = false;
+      };
+
+      const prepareAppAttempt = (route) => {
+        clearFallbackTimer();
+        fallbackPanel.hidden = true;
+        retryAppLink.href = targetForDevice(route);
+        openWebLink.href = route.web;
+        fallbackTimer = window.setTimeout(() => {
+          if (!document.hidden) {
+            showFallback(route);
+          }
+        }, 1600);
+      };
 
       const announce = (message) => {
         shareStatus.textContent = "";
@@ -841,19 +1081,57 @@
         }
       });
 
-      if (/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
-        const videoUrl = "https://www.youtube.com/watch?v=" + encodeURIComponent(videoId);
+      document.querySelectorAll(".social-link[data-platform]").forEach((link) => {
+        const route = routes[link.dataset.platform];
+
+        if (!route) {
+          return;
+        }
+
+        link.href = targetForDevice(route);
+
+        link.addEventListener("click", () => {
+          retryAppLink.dataset.platform = link.dataset.platform;
+
+          if (isMobile) {
+            prepareAppAttempt(route);
+          }
+        });
+      });
+
+      retryAppLink.addEventListener("click", () => {
+        const platform = retryAppLink.dataset.platform;
+        const route = routes[platform];
+
+        if (route && isMobile) {
+          prepareAppAttempt(route);
+        }
+      });
+
+      if (videoId) {
         const youtubeLink = document.getElementById("youtube-link");
 
-        youtubeLink.href = videoUrl;
         youtubeLink.setAttribute("aria-label", "Watch this full video on YouTube");
         youtubeLink.querySelector(".link-kicker").textContent = "Featured video";
-        youtubeLink.querySelector(".link-title").textContent = "Watch the Full Video on YouTube";
-
-        window.setTimeout(() => {
-          window.location.assign(videoUrl);
-        }, 180);
+        youtubeLink.querySelector(".link-title").textContent = "Open the Full Video in YouTube App";
       }
+
+      inAppNote.hidden = !isInAppBrowser;
+
+      const requestedFallback = params.get("fallback") || "";
+
+      if (Object.prototype.hasOwnProperty.call(routes, requestedFallback)) {
+        const route = routes[requestedFallback];
+        retryAppLink.dataset.platform = requestedFallback;
+        showFallback(route);
+      }
+
+      window.addEventListener("pagehide", clearFallbackTimer);
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          clearFallbackTimer();
+        }
+      });
     })();
   </script>
 </body>

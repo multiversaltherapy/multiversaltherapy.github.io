@@ -7,8 +7,7 @@
   <meta name="color-scheme" content="dark">
   <meta name="robots" content="noindex">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-MoL/OXp5Zin752D1X8UhxHQq5XIWhrnuuM+FImtgLV4='; style-src-attr 'none'; script-src 'sha256-A0aKoxkyhKWAWJyZQxqiA7urc97euKHQFetgiq2ks8I='; script-src-attr 'none'; connect-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
-  <noscript><meta http-equiv="refresh" content="0;url=https://multiversaltherapy.github.io/"></noscript>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-SoDhWlYIXvFw5wi8h/UnlujqnuVFvJEdoRjUBiXeabU='; style-src-attr 'none'; script-src 'sha256-Hr/Wbw6Yrc2tVCp5rK9AOqPLKx6aPdXETO/mfGKB6yg='; script-src-attr 'none'; connect-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
   <link rel="canonical" href="https://multiversaltherapy.github.io/">
   <title>Opening Multiversal Therapy</title>
 
@@ -88,6 +87,31 @@
       outline-offset: 3px;
     }
 
+    .in-app-note,
+    .fallback-panel {
+      margin: 18px 0 0;
+      padding: 13px 14px;
+      border: 1px solid rgba(223, 160, 87, 0.26);
+      border-radius: 14px;
+      background: rgba(223, 160, 87, 0.065);
+      color: #c5beb5;
+      font-size: 0.76rem;
+      line-height: 1.55;
+    }
+
+    .in-app-note[hidden],
+    .fallback-panel[hidden] {
+      display: none;
+    }
+
+    .fallback-panel a {
+      margin-top: 13px;
+    }
+
+    .browser-help {
+      color: #f0c17f;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       * {
         scroll-behavior: auto !important;
@@ -99,9 +123,19 @@
 <body>
   <main>
     <div class="mark" aria-hidden="true">M</div>
-    <h1>Opening Multiversal Therapy…</h1>
-    <p>If the page does not open automatically, use the button below.</p>
-    <a id="continue-link" href="https://multiversaltherapy.github.io/">Continue</a>
+    <h1 id="headline">Continue to Multiversal Therapy</h1>
+    <p id="message">Use the button below to continue.</p>
+    <a id="continue-link" href="https://multiversaltherapy.github.io/">Open Multiversal Therapy</a>
+    <p class="in-app-note" id="in-app-note" hidden>
+      You’re viewing this page inside an in-app browser. Your tap will try to hand the link to the installed YouTube app.
+    </p>
+    <section class="fallback-panel" id="fallback-panel" aria-live="polite" hidden>
+      <p id="fallback-copy">The YouTube app did not open.</p>
+      <a id="web-link" href="https://www.youtube.com/" rel="external noreferrer">Continue on YouTube Web</a>
+      <p class="browser-help" id="browser-help" hidden>
+        In Instagram, tap ⋮ and choose “Open in external browser,” then try again.
+      </p>
+    </section>
   </main>
 
   <script>
@@ -109,19 +143,101 @@
       "use strict";
 
       const rootUrl = "https://multiversaltherapy.github.io/";
-      const videoId = new URLSearchParams(window.location.search).get("v") || "";
-      const hasVideo = /^[A-Za-z0-9_-]{11}$/.test(videoId);
-      const destination = hasVideo
-        ? "https://www.youtube.com/watch?v=" + encodeURIComponent(videoId)
-        : rootUrl;
+      const params = new URLSearchParams(window.location.search);
+      const requestedVideoId = params.get("v") || "";
+      const videoId = /^[A-Za-z0-9_-]{11}$/.test(requestedVideoId)
+        ? requestedVideoId
+        : "";
+      const userAgent = navigator.userAgent || "";
+      const isAndroid = /Android/i.test(userAgent);
+      const isIOS = /iPhone|iPad|iPod/i.test(userAgent)
+        || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      const isMobile = isAndroid || isIOS;
+      const isInAppBrowser = /Instagram|FBAN|FBAV|TikTok|musical_ly|BytedanceWebview/i.test(userAgent);
       const link = document.getElementById("continue-link");
+      const headline = document.getElementById("headline");
+      const message = document.getElementById("message");
+      const inAppNote = document.getElementById("in-app-note");
+      const fallbackPanel = document.getElementById("fallback-panel");
+      const fallbackCopy = document.getElementById("fallback-copy");
+      const webLink = document.getElementById("web-link");
+      const browserHelp = document.getElementById("browser-help");
+      let fallbackTimer = 0;
 
-      link.href = destination;
-      link.textContent = hasVideo ? "Watch on YouTube" : "Open Multiversal Therapy";
+      const clearFallbackTimer = () => {
+        if (fallbackTimer) {
+          window.clearTimeout(fallbackTimer);
+          fallbackTimer = 0;
+        }
+      };
 
-      window.setTimeout(() => {
-        window.location.replace(destination);
-      }, 160);
+      const createAndroidIntent = (deepLink, fallbackUrl) => {
+        const schemeMarker = deepLink.indexOf("://");
+        const scheme = deepLink.slice(0, schemeMarker);
+        const target = deepLink.slice(schemeMarker + 3);
+
+        return "intent://" + target
+          + "#Intent;scheme=" + scheme
+          + ";package=com.google.android.youtube"
+          + ";S.browser_fallback_url=" + encodeURIComponent(fallbackUrl)
+          + ";end";
+      };
+
+      const showFallback = () => {
+        clearFallbackTimer();
+        fallbackCopy.textContent = isInAppBrowser
+          ? "Instagram may have blocked the handoff to the YouTube app."
+          : "The YouTube app may not be installed or the operating system may have blocked the handoff.";
+        browserHelp.hidden = !isInAppBrowser;
+        fallbackPanel.hidden = false;
+      };
+
+      inAppNote.hidden = !isInAppBrowser;
+
+      if (videoId) {
+        const webUrl = "https://www.youtube.com/watch?v=" + encodeURIComponent(videoId);
+        const deepLink = "vnd.youtube://www.youtube.com/watch?v="
+          + encodeURIComponent(videoId)
+          + "&feature=applinks";
+        const fallbackUrl = rootUrl + "?fallback=youtube&v=" + encodeURIComponent(videoId);
+        const target = isAndroid
+          ? createAndroidIntent(deepLink, fallbackUrl)
+          : (isIOS ? deepLink : webUrl);
+
+        headline.textContent = "Open the Full Video in YouTube";
+        message.textContent = "Tap once to open the installed YouTube app.";
+        link.href = target;
+        link.textContent = "Open Video in YouTube App";
+        webLink.href = webUrl;
+
+        link.addEventListener("click", () => {
+          if (!isMobile) {
+            return;
+          }
+
+          clearFallbackTimer();
+          fallbackTimer = window.setTimeout(() => {
+            if (!document.hidden) {
+              showFallback();
+            }
+          }, 1600);
+        });
+
+        if (params.get("fallback") === "youtube") {
+          showFallback();
+        }
+      } else {
+        link.href = rootUrl;
+        link.textContent = "Open Multiversal Therapy";
+        webLink.href = rootUrl;
+      }
+
+      window.addEventListener("pagehide", clearFallbackTimer);
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          clearFallbackTimer();
+        }
+      });
     })();
   </script>
 </body>
