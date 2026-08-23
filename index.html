@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#100f0e">
   <meta name="color-scheme" content="dark">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="referrer" content="no-referrer">
   <meta name="description" content="Official Multiversal Therapy links. Psychological character studies across worlds, choices, and consequences.">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'nonce-mt-links-v2'; script-src 'nonce-mt-links-v2'; manifest-src 'self'; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'sha256-OQhm74mFAs31wNDjCUBrx69J7ZrIb3lKkW88p4ynZkg='; style-src-attr 'none'; script-src 'sha256-kPkYlgFsLrnZXfc1mkcHCrgSXVYz2ak+VkkraTK34M8=' 'sha256-Dj16uriHryvRcxo+TxZjlCd5uP/gpYzUNT5SP/x9r+8='; script-src-attr 'none'; connect-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Multiversal Therapy">
   <meta property="og:title" content="Multiversal Therapy | Official Links">
   <meta property="og:description" content="What if fictional characters had therapy?">
   <meta property="og:url" content="https://multiversaltherapy.github.io/">
-  <meta property="og:image" content="https://multiversaltherapy.github.io/assets/og-card.jpg">
+  <meta property="og:image" content="https://multiversaltherapy.github.io/assets/og-card-v1.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -23,7 +23,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Multiversal Therapy | Official Links">
   <meta name="twitter:description" content="What if fictional characters had therapy?">
-  <meta name="twitter:image" content="https://multiversaltherapy.github.io/assets/og-card.jpg">
+  <meta name="twitter:image" content="https://multiversaltherapy.github.io/assets/og-card-v1.jpg">
   <meta name="twitter:image:alt" content="Multiversal Therapy — a therapist and a fictional armored character seated across a glowing portal">
 
   <link rel="canonical" href="https://multiversaltherapy.github.io/">
@@ -31,7 +31,7 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <title>Multiversal Therapy | Official Links</title>
 
-  <style nonce="mt-links-v2">
+  <style>
     :root {
       color-scheme: dark;
       font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -498,6 +498,15 @@
       border: 0 !important;
     }
 
+    .copy-helper {
+      position: fixed;
+      inset: 0;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
     .reveal {
       animation: rise-in 620ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
     }
@@ -526,7 +535,20 @@
       }
     }
 
-    @media (max-width: 440px) {
+    @media (max-width: 480px) {
+      body::before {
+        top: -18rem;
+        width: 38rem;
+        height: 38rem;
+        box-shadow:
+          0 0 0 4rem rgba(223, 160, 87, 0.022),
+          0 0 54px rgba(223, 160, 87, 0.06);
+      }
+
+      body::after {
+        display: none;
+      }
+
       .page-shell {
         padding-right: 11px;
         padding-left: 11px;
@@ -535,6 +557,7 @@
       .profile-card {
         padding: 24px 17px 22px;
         border-radius: 25px;
+        box-shadow: 0 22px 55px rgba(0, 0, 0, 0.42);
       }
 
       .card-toolbar {
@@ -643,8 +666,8 @@
           <span class="avatar-fallback" aria-hidden="true">M</span>
           <img
             class="avatar"
-            src="/assets/profile-256.webp"
-            srcset="/assets/profile-256.webp 256w, /assets/profile-512.webp 512w"
+            src="/assets/profile-256-v1.webp"
+            srcset="/assets/profile-256-v1.webp 256w, /assets/profile-512-v1.webp 512w"
             sizes="136px"
             width="256"
             height="256"
@@ -729,7 +752,7 @@
     </article>
   </main>
 
-  <script type="application/ld+json" nonce="mt-links-v2">
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "ProfilePage",
@@ -741,7 +764,7 @@
         "name": "Multiversal Therapy",
         "alternateName": "@multiversaltherapy",
         "description": "Psychological character studies across worlds, choices, and consequences.",
-        "image": "https://multiversaltherapy.github.io/assets/profile-512.webp",
+        "image": "https://multiversaltherapy.github.io/assets/profile-512-v1.webp",
         "url": "https://multiversaltherapy.github.io/",
         "sameAs": [
           "https://www.youtube.com/@multiversaltherapy",
@@ -752,7 +775,7 @@
     }
   </script>
 
-  <script nonce="mt-links-v2">
+  <script>
     (() => {
       "use strict";
 
@@ -777,12 +800,15 @@
         const input = document.createElement("textarea");
         input.value = canonicalUrl;
         input.setAttribute("readonly", "");
-        input.style.position = "fixed";
-        input.style.opacity = "0";
+        input.className = "copy-helper";
         document.body.appendChild(input);
         input.select();
-        document.execCommand("copy");
+        const copied = document.execCommand("copy");
         input.remove();
+
+        if (!copied) {
+          throw new Error("Clipboard fallback failed.");
+        }
       };
 
       shareButton.addEventListener("click", async () => {

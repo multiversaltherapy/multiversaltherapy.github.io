@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#100f0e">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-MoL/OXp5Zin752D1X8UhxHQq5XIWhrnuuM+FImtgLV4='; style-src-attr 'none'; script-src 'sha256-A0aKoxkyhKWAWJyZQxqiA7urc97euKHQFetgiq2ks8I='; script-src-attr 'none'; connect-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <noscript><meta http-equiv="refresh" content="0;url=https://multiversaltherapy.github.io/"></noscript>
+  <link rel="canonical" href="https://multiversaltherapy.github.io/">
+  <title>Opening Multiversal Therapy</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      display: grid;
+      min-height: 100vh;
+      min-height: 100svh;
+      margin: 0;
+      place-items: center;
+      padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      background: radial-gradient(circle at 50% 20%, rgba(223, 160, 87, 0.18), transparent 25rem), #100f0e;
+      color: #f4eee6;
+      text-align: center;
+    }
+
+    main {
+      width: min(100%, 460px);
+    }
+
+    .mark {
+      display: grid;
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 22px;
+      place-items: center;
+      border: 2px solid #dfa057;
+      border-radius: 50%;
+      color: #f4eee6;
+      font-family: ui-serif, Georgia, serif;
+      font-size: 2rem;
+      font-weight: 700;
+      box-shadow: 0 0 36px rgba(223, 160, 87, 0.16);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.55rem;
+    }
+
+    p {
+      margin: 12px 0 0;
+      color: #aba79f;
+      line-height: 1.55;
+    }
+
+    a {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+      padding: 12px 20px;
+      border: 1px solid #dfa057;
+      border-radius: 14px;
+      background: rgba(223, 160, 87, 0.1);
+      color: #f4eee6;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    a:hover {
+      background: rgba(223, 160, 87, 0.18);
+    }
+
+    a:focus-visible {
+      outline: 3px solid #f0c17f;
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div class="mark" aria-hidden="true">M</div>
+    <h1>Opening Multiversal Therapy…</h1>
+    <p>If the page does not open automatically, use the button below.</p>
+    <a id="continue-link" href="https://multiversaltherapy.github.io/">Continue</a>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const rootUrl = "https://multiversaltherapy.github.io/";
+      const videoId = new URLSearchParams(window.location.search).get("v") || "";
+      const hasVideo = /^[A-Za-z0-9_-]{11}$/.test(videoId);
+      const destination = hasVideo
+        ? "https://www.youtube.com/watch?v=" + encodeURIComponent(videoId)
+        : rootUrl;
+      const link = document.getElementById("continue-link");
+
+      link.href = destination;
+      link.textContent = hasVideo ? "Watch on YouTube" : "Open Multiversal Therapy";
+
+      window.setTimeout(() => {
+        window.location.replace(destination);
+      }, 160);
+    })();
+  </script>
+</body>
+</html>

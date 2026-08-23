@@ -14,4 +14,4 @@ https://multiversaltherapy.github.io/
 
 The site is a static, responsive GitHub Pages page with no cookies, analytics, external fonts, or third-party runtime dependencies.
 
-Legacy YouTube links using `?v=YOUTUBE_VIDEO_ID` remain supported.
+Legacy YouTube links using `?v=YOUTUBE_VIDEO_ID` remain supported at both the root URL and `/youtube-app-opener/` compatibility path.
