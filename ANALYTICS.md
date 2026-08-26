@@ -8,7 +8,7 @@ The public Link Bio currently has **analytics disabled**.
 - No analytics event is sent from the browser.
 - No IP-geolocation request is sent.
 - No public analytics read credential is embedded in the frontend.
-- No CounterAPI, ipapi or Cloudflare runtime dependency is active.
+- No third-party analytics or geo runtime dependency is active.
 
 The site still accepts normal URL parameters such as `?lang=tr` / `?lang=en` for language selection and `?fallback=` internally for app-opening fallback behavior, but these are not used for analytics collection.
 
