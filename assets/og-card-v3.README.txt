@@ -1,1 +1,0 @@
-The social preview uses the existing verified JPEG asset during the v3 hardening rollout.
