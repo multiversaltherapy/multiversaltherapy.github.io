@@ -20,4 +20,16 @@ No social-media password, account credential, OAuth token or analytics read secr
 
 Fallback returns do not create a second page view.
 
-Country/IP based language detection remains disabled. Initial language priority is explicit `?lang=`, saved manual preference, then browser language.
+Initial language priority is explicit `?lang=`, saved manual preference, current-session automatic result, IP-country result, then browser language. The initial `language` event waits for that choice to settle; `page_view` and `source` are sent immediately.
+
+IP-country detection calls `https://api.ipapi.is` without a key. The site reads only the `cc` country-code field, maps `TR` to Turkish and every other valid country to English, and stores only the resolved language in session storage. A timeout, malformed response, network error or rate limit falls back to browser language.
+
+## Non-mutating verification
+
+Read a counter without incrementing it:
+
+```text
+https://counterapi.com/api/multiversaltherapy.github.io/page_view/home?readOnly=true
+```
+
+For an end-to-end test, read the relevant counters first, load the page once with a known `?lang=` and `?src=`, trigger the intended control, then read the same counters again. A one-step increase confirms the event path; remember that these public counters are not protected against synthetic requests.

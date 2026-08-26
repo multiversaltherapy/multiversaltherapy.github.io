@@ -2,6 +2,8 @@
   "use strict";
 
   const CANONICAL_URL = "https://multiversaltherapy.github.io/";
+  const COUNTRY_LOOKUP_URL = "https://api.ipapi.is";
+  const COUNTRY_LOOKUP_TIMEOUT_MS = 1800;
   const params = new URLSearchParams(window.location.search);
   const userAgent = navigator.userAgent || "";
   const isAndroid = /Android/i.test(userAgent);
@@ -23,6 +25,8 @@
   const profileTitle = document.getElementById("profile-title");
 
   let currentLanguage = "en";
+  let currentLanguageSource = "browser";
+  let languageRevision = 0;
   let fallbackTimer = 0;
 
   const copy = {
@@ -54,7 +58,7 @@
       continueWeb: "Continue on Web",
       browserHelp: "Still here? Use the browser menu to open this page in your external browser, then try again.",
       disclaimer: "Fictional character analysis for education and entertainment — not mental-health advice.",
-      privacy: "No ad cookies · No analytics tracking · Local language preference",
+      privacy: "No ad cookies · Anonymous metrics · Session-based IP-country language",
       privacyLink: "Privacy",
       shareOpened: "Share menu opened.",
       linkCopied: "Link copied.",
@@ -88,7 +92,7 @@
       continueWeb: "Web’de Devam Et",
       browserHelp: "Hâlâ buradaysanız tarayıcı menüsünden harici tarayıcıda açın ve tekrar deneyin.",
       disclaimer: "Kurgusal karakter analizi eğitim ve eğlence amaçlıdır; ruh sağlığı tavsiyesi değildir.",
-      privacy: "Reklam çerezi yok · Analytics takibi yok · Dil tercihi cihazda saklanır",
+      privacy: "Reklam çerezi yok · Anonim ölçüm · Oturumluk IP-ülke dil seçimi",
       privacyLink: "Gizlilik",
       shareOpened: "Paylaşım menüsü açıldı.",
       linkCopied: "Bağlantı kopyalandı.",
@@ -160,14 +164,80 @@
     }
   };
 
+  const sessionLanguage = () => {
+    try {
+      const value = sessionStorage.getItem("mt-auto-language");
+      return value === "tr" || value === "en" ? value : "";
+    } catch (_) {
+      return "";
+    }
+  };
+
+  const saveSessionLanguage = language => {
+    try { sessionStorage.setItem("mt-auto-language", language); } catch (_) {}
+  };
+
+  const browserLanguage = () =>
+    (navigator.language || "").toLowerCase().startsWith("tr") ? "tr" : "en";
+
   const chooseInitialLanguage = () => {
     const explicit = params.get("lang");
-    if (explicit === "tr" || explicit === "en") return explicit;
+    if (explicit === "tr" || explicit === "en") {
+      return { language: explicit, source: "query", detectCountry: false };
+    }
 
     const saved = savedLanguage();
-    if (saved) return saved;
+    if (saved) return { language: saved, source: "saved", detectCountry: false };
 
-    return (navigator.language || "").toLowerCase().startsWith("tr") ? "tr" : "en";
+    const session = sessionLanguage();
+    if (session) return { language: session, source: "session", detectCountry: false };
+
+    return { language: browserLanguage(), source: "browser", detectCountry: true };
+  };
+
+  const setLanguageSource = source => {
+    currentLanguageSource = source;
+    document.documentElement.dataset.languageSource = source;
+  };
+
+  const detectCountryLanguage = async () => {
+    const controller = typeof AbortController === "function" ? new AbortController() : null;
+    const timeout = controller
+      ? window.setTimeout(() => controller.abort(), COUNTRY_LOOKUP_TIMEOUT_MS)
+      : 0;
+
+    try {
+      const response = await fetch(COUNTRY_LOOKUP_URL, {
+        method: "GET",
+        mode: "cors",
+        credentials: "omit",
+        cache: "no-store",
+        referrerPolicy: "no-referrer",
+        signal: controller ? controller.signal : undefined
+      });
+      if (!response.ok) return "";
+
+      const data = await response.json();
+      const country = typeof data.cc === "string" ? data.cc.trim().toUpperCase() : "";
+      if (!/^[A-Z]{2}$/.test(country)) return "";
+      return country === "TR" ? "tr" : "en";
+    } catch (_) {
+      return "";
+    } finally {
+      if (timeout) window.clearTimeout(timeout);
+    }
+  };
+
+  const resolveAutomaticLanguage = async revision => {
+    const detectedLanguage = await detectCountryLanguage();
+    if (detectedLanguage) saveSessionLanguage(detectedLanguage);
+
+    if (languageRevision === revision) {
+      if (detectedLanguage) applyLanguage(detectedLanguage);
+      setLanguageSource(detectedLanguage ? "country" : "browser");
+    }
+
+    return { language: currentLanguage, source: currentLanguageSource };
   };
 
   const createFallbackUrl = platform => {
@@ -265,7 +335,9 @@
   const wireEvents = () => {
     languageButtons.forEach(button => {
       button.addEventListener("click", () => {
+        languageRevision += 1;
         applyLanguage(button.dataset.language, { persist: true });
+        setLanguageSource("manual");
       });
     });
 
@@ -307,7 +379,9 @@
   };
 
   const initialize = () => {
-    applyLanguage(chooseInitialLanguage());
+    const initialLanguage = chooseInitialLanguage();
+    applyLanguage(initialLanguage.language);
+    setLanguageSource(initialLanguage.source);
     wireEvents();
     inAppNote.hidden = !isInAppBrowser;
 
@@ -315,6 +389,10 @@
     if (Object.prototype.hasOwnProperty.call(routes, requestedFallback)) {
       showFallback(requestedFallback, routes[requestedFallback]);
     }
+
+    window.mtLanguageReady = initialLanguage.detectCountry
+      ? resolveAutomaticLanguage(languageRevision)
+      : Promise.resolve({ language: currentLanguage, source: currentLanguageSource });
   };
 
   initialize();

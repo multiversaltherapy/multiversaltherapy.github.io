@@ -48,8 +48,8 @@
     const node = document.getElementById("privacy-note");
     if (!node) return;
     node.textContent = currentLanguage() === "tr"
-      ? "Reklam çerezi yok · Anonim kullanım ölçümü · Dil tercihi cihazda saklanır"
-      : "No ad cookies · Anonymous usage metrics · Local language preference";
+      ? "Reklam çerezi yok · Anonim ölçüm · Oturumluk IP-ülke dil seçimi"
+      : "No ad cookies · Anonymous metrics · Session-based IP-country language";
   };
 
   document.querySelectorAll(".social-link[data-platform]").forEach(link => {
@@ -70,7 +70,7 @@
       const next = button.dataset.language === "tr" ? "tr" : "en";
       if (next !== lastLanguage) track("language_switch", `${lastLanguage}_to_${next}`);
       lastLanguage = next;
-    });
+    }, { capture: true });
   });
 
   const observer = new MutationObserver(() => {
@@ -85,6 +85,15 @@
   } else {
     track("page_view", "home");
     track("source", detectSource());
-    track("language", currentLanguage());
+
+    const languageReady = window.mtLanguageReady;
+    if (languageReady && typeof languageReady.then === "function") {
+      languageReady.then(
+        () => track("language", currentLanguage()),
+        () => track("language", currentLanguage())
+      );
+    } else {
+      track("language", currentLanguage());
+    }
   }
 })();
