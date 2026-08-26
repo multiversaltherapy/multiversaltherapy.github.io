@@ -1,1 +1,0 @@
-OG v3 currently reuses the verified v1 social preview asset until a separately optimized v3 card is generated.
