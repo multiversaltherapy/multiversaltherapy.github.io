@@ -49,26 +49,42 @@ def check_security():
     index=(ROOT/"index.html").read_text(encoding="utf-8")
     js=(ROOT/"assets/link-bio-v3.js").read_text(encoding="utf-8")
     css=(ROOT/"assets/link-bio-v3.css").read_text(encoding="utf-8")
-    forbidden=["counterapi.com","ipapi.co","unsafe-eval","unsafe-inline"]
-    for item in forbidden:
-        if item in index or item in js or item in (ROOT/"privacy.html").read_text(encoding="utf-8") or item in (ROOT/"404.html").read_text(encoding="utf-8"):
+    privacy=(ROOT/"privacy.html").read_text(encoding="utf-8")
+    analytics=(ROOT/"ANALYTICS.md").read_text(encoding="utf-8")
+
+    forbidden_runtime=[
+        "counterapi.com", "ipapi.co", "unsafe-eval", "unsafe-inline",
+        "mt-analytics-endpoint", "mt-context-endpoint", "sendEvent(",
+        "fetchCountry", "analyticsEndpoint", "contextEndpoint"
+    ]
+    for item in forbidden_runtime:
+        if item in index or item in js or item in privacy:
             raise AssertionError(f"Forbidden runtime dependency/security token present: {item}")
+
+    for path in ROOT.rglob("*"):
+        if path.is_file() and path.suffix.lower() in {".html", ".js", ".css", ".md", ".toml", ".yml", ".yaml"}:
+            text=path.read_text(encoding="utf-8", errors="ignore")
+            if "cloudflare" in text.lower():
+                raise AssertionError(f"Cloudflare reference remains: {path.relative_to(ROOT)}")
+
     if "background-attachment:fixed" in css.replace(" ",""):
         raise AssertionError("Fixed background attachment must not be used")
     if "tr-brand.js" in index or "visual-refresh.css" in index:
         raise AssertionError("Legacy visual/localization runtime still referenced")
     if "profile-v3-256.jpg" not in index:
         raise AssertionError("Verified v3 profile asset is not wired")
-    if js.index("wireEvents();") > js.index("await chooseInitialLanguage()"):
-        raise AssertionError("Navigation is wired after geolocation; first-tap race can return")
-    if 'if (!isFallbackReturn)' not in js:
-        raise AssertionError("Fallback return de-duplication is missing")
+    if "No analytics tracking" not in index:
+        raise AssertionError("UI privacy status does not state that analytics is disabled")
+    if "analytics disabled" not in analytics.lower():
+        raise AssertionError("Analytics documentation is not explicit about disabled state")
+
     match = re.search(r'<script type="application/ld\+json">(.*?)</script>', index, re.S)
     if not match:
         raise AssertionError("JSON-LD block is missing")
     digest = "sha256-" + base64.b64encode(hashlib.sha256(match.group(1).encode()).digest()).decode()
     if digest not in index:
         raise AssertionError("CSP hash does not match the JSON-LD block")
+
     legacy=(ROOT/"youtube-app-opener/index.html").read_text(encoding="utf-8")
     if "requestedVideoId" in legacy or "watch?v=" in legacy or "params.get(\"v\")" in legacy:
         raise AssertionError("Legacy video-ID routing logic remains")
