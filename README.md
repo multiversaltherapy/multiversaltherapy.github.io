@@ -18,12 +18,16 @@ It does **not** display or synchronize individual video links, latest-video meta
 
 - Manual TR / EN switch is always available.
 - A saved manual language preference takes precedence.
-- When the first-party context endpoint is enabled, Turkey (`TR`) selects Turkish and other countries select English.
-- Browser language is the fallback when no context endpoint is configured or available.
+- Browser language is used as the automatic fallback.
+- Country-based language detection is currently disabled because no geo backend is configured.
 
 ## Analytics & privacy
 
-The frontend contains no public analytics read token and no third-party CounterAPI/ipapi runtime calls. Analytics and country lookup are designed to use a first-party endpoint when configured. See `ANALYTICS.md`, `privacy.html` and `cloudflare/README.md`.
+The frontend contains no public analytics read token and no third-party CounterAPI/ipapi runtime calls.
+
+Analytics collection is currently disabled until a separate backend is explicitly selected and configured. No replacement service is silently enabled.
+
+See `ANALYTICS.md` and `privacy.html`.
 
 ## Reliability
 
