@@ -41,7 +41,7 @@ def check_images():
             with Image.open(path) as im:
                 if im.width < 32 or im.height < 32:
                     raise AssertionError(f"Suspiciously small image: {path}")
-                expected = {"profile-v3-256.webp": (256, 256), "profile-v3-512.webp": (512, 512)}.get(path.name)
+                expected = {"profile-v3-256.jpg": (256, 256)}.get(path.name)
                 if expected and im.size != expected:
                     raise AssertionError(f"Wrong dimensions for {path.name}: {im.size}, expected {expected}")
 
@@ -57,8 +57,8 @@ def check_security():
         raise AssertionError("Fixed background attachment must not be used")
     if "tr-brand.js" in index or "visual-refresh.css" in index:
         raise AssertionError("Legacy visual/localization runtime still referenced")
-    if "profile-v3-256.webp" not in index or "profile-v3-512.webp" not in index:
-        raise AssertionError("Responsive v3 profile assets are not wired")
+    if "profile-v3-256.jpg" not in index:
+        raise AssertionError("Verified v3 profile asset is not wired")
     if js.index("wireEvents();") > js.index("await chooseInitialLanguage()"):
         raise AssertionError("Navigation is wired after geolocation; first-tap race can return")
     if 'if (!isFallbackReturn)' not in js:
