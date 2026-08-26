@@ -19,13 +19,13 @@ It does **not** display or synchronize individual video links, latest-video meta
 - Manual TR / EN switch is always available.
 - A saved manual language preference takes precedence.
 - Browser language is used as the automatic fallback.
-- Country-based language detection is currently disabled because no geo backend is configured.
+- Country/IP based language detection is disabled.
 
 ## Analytics & privacy
 
-The frontend contains no public analytics read token and no third-party CounterAPI/ipapi runtime calls.
+The site uses lightweight anonymous aggregate counters for page views, source categories, language selection and social-button clicks. Counter values are public/no-auth and can be manipulated, so they are directional metrics rather than tamper-proof records.
 
-Analytics collection is currently disabled until a separate backend is explicitly selected and configured. No replacement service is silently enabled.
+No social-media password, account credential, OAuth token or analytics read secret is embedded in the frontend.
 
 See `ANALYTICS.md` and `privacy.html`.
 
