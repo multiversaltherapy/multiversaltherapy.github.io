@@ -2,16 +2,15 @@
   "use strict";
 
   const CANONICAL_URL = "https://multiversaltherapy.github.io/";
-  const ANALYTICS_NAMESPACE = "multiversaltherapy.github.io";
-  const ANALYTICS_BASE = "https://counterapi.com/api";
-  const YOUTUBE_CHANNEL_ID = "UCPO0-IQp1HNt39COoYquIGg";
-  const TIKTOK_USER_ID = "7662102949010785301";
   const params = new URLSearchParams(window.location.search);
   const userAgent = navigator.userAgent || "";
   const isAndroid = /Android/i.test(userAgent);
-  const isIOS = /iPhone|iPad|iPod/i.test(userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isIOS = /iPhone|iPad|iPod/i.test(userAgent)
+    || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   const isMobile = isAndroid || isIOS;
   const isInAppBrowser = /Instagram|FBAN|FBAV|TikTok|musical_ly|BytedanceWebview/i.test(userAgent);
+  const analyticsEndpoint = document.querySelector('meta[name="mt-analytics-endpoint"]')?.content?.trim() || "";
+  const contextEndpoint = document.querySelector('meta[name="mt-context-endpoint"]')?.content?.trim() || "";
 
   const languageButtons = Array.from(document.querySelectorAll(".language-button[data-language]"));
   const shareButton = document.getElementById("share-button");
@@ -23,28 +22,31 @@
   const retryAppLink = document.getElementById("retry-app-link");
   const openWebLink = document.getElementById("open-web-link");
   const externalBrowserHelp = document.getElementById("external-browser-help");
+  const profileTitle = document.getElementById("profile-title");
 
   let currentLanguage = "en";
   let fallbackTimer = 0;
 
   const copy = {
     en: {
+      brand: "Multiversal Therapy",
+      pageTitle: "Multiversal Therapy | Official Links",
       officialLinks: "Official links",
       share: "Share",
       shareAria: "Share Multiversal Therapy",
       tagline: "What if fictional characters had therapy?",
       subline: "Psychological character studies across worlds, choices, and consequences.",
       navAria: "Official Multiversal Therapy profiles",
-      youtubeAria: "Watch full videos by Multiversal Therapy on YouTube",
-      youtubeKicker: "Full episodes",
-      youtubeTitle: "Watch Full Videos on YouTube",
-      youtubeDetail: "@multiversaltherapy · Long-form analyses",
+      youtubeAria: "Watch Multiversal Therapy on YouTube",
+      youtubeKicker: "YouTube",
+      youtubeTitle: "Open YouTube",
+      youtubeDetail: "@multiversaltherapy · Official channel",
       instagramAria: "Follow Multiversal Therapy on Instagram",
-      instagramTitle: "Follow on Instagram",
-      instagramDetail: "@multiversaltherapy · Visual stories & updates",
-      tiktokAria: "Watch short analyses by Multiversal Therapy on TikTok",
-      tiktokTitle: "Watch Short Analyses on TikTok",
-      tiktokDetail: "@multiversaltherapy · Short-form videos",
+      instagramTitle: "Open Instagram",
+      instagramDetail: "@multiversaltherapy · Official profile",
+      tiktokAria: "Watch Multiversal Therapy on TikTok",
+      tiktokTitle: "Open TikTok",
+      tiktokDetail: "@multiversaltherapy · Official profile",
       mobileNote: "On mobile, each button tries to open the installed app directly.",
       inAppNote: "You’re viewing this page inside an in-app browser. Tap a platform once to hand the link to its installed app.",
       fallbackTitle: "The app did not open.",
@@ -52,42 +54,46 @@
       fallbackOther: "The app may not be installed or the operating system may have blocked the handoff.",
       retry: "Try {platform} App Again",
       continueWeb: "Continue on Web",
-      browserHelp: "Still here? In Instagram, tap ⋮ and choose “Open in external browser,” then tap the platform again.",
+      browserHelp: "Still here? Use the browser menu to open this page in your external browser, then try again.",
       disclaimer: "Fictional character analysis for education and entertainment — not mental-health advice.",
-      privacy: "No ad cookies · Anonymous usage metrics",
-      geoPrivacy: "Country is used only to choose the initial TR/EN language.",
+      privacy: "No ad cookies · Local language preference",
+      geoPrivacy: "Country detection is used only when the first-party privacy endpoint is enabled.",
+      privacyLink: "Privacy",
       shareOpened: "Share menu opened.",
       linkCopied: "Link copied.",
       copyFailed: "Copy failed. Use the address in your browser."
     },
     tr: {
+      brand: "Çokluevren Terapisi",
+      pageTitle: "Çokluevren Terapisi | Resmî Bağlantılar",
       officialLinks: "Resmî bağlantılar",
       share: "Paylaş",
-      shareAria: "Multiversal Therapy bağlantısını paylaş",
+      shareAria: "Çokluevren Terapisi bağlantısını paylaş",
       tagline: "Kurgusal karakterler terapi alsaydı ne olurdu?",
       subline: "Farklı evrenlerde karakterlerin psikolojisini, seçimlerini ve sonuçlarını inceliyoruz.",
-      navAria: "Multiversal Therapy resmî profilleri",
-      youtubeAria: "Multiversal Therapy uzun videolarını YouTube’da izle",
-      youtubeKicker: "Uzun bölümler",
-      youtubeTitle: "YouTube’da Uzun Videoları İzle",
-      youtubeDetail: "@multiversaltherapy · Uzun format analizler",
-      instagramAria: "Multiversal Therapy hesabını Instagram’da takip et",
-      instagramTitle: "Instagram’da Takip Et",
-      instagramDetail: "@multiversaltherapy · Görsel hikâyeler ve güncellemeler",
-      tiktokAria: "Multiversal Therapy kısa analizlerini TikTok’ta izle",
-      tiktokTitle: "TikTok’ta Kısa Analizleri İzle",
-      tiktokDetail: "@multiversaltherapy · Kısa format videolar",
+      navAria: "Çokluevren Terapisi resmî profilleri",
+      youtubeAria: "Çokluevren Terapisi YouTube hesabını aç",
+      youtubeKicker: "YouTube",
+      youtubeTitle: "YouTube’u Aç",
+      youtubeDetail: "@multiversaltherapy · Resmî kanal",
+      instagramAria: "Çokluevren Terapisi Instagram hesabını aç",
+      instagramTitle: "Instagram’ı Aç",
+      instagramDetail: "@multiversaltherapy · Resmî profil",
+      tiktokAria: "Çokluevren Terapisi TikTok hesabını aç",
+      tiktokTitle: "TikTok’u Aç",
+      tiktokDetail: "@multiversaltherapy · Resmî profil",
       mobileNote: "Mobilde her buton, ilgili uygulama yüklüyse doğrudan açmayı dener.",
-      inAppNote: "Bu sayfayı uygulama içi tarayıcıda görüntülüyorsunuz. Bağlantıyı yüklü uygulamaya aktarmak için platforma bir kez dokunun.",
+      inAppNote: "Bu sayfayı uygulama içi tarayıcıda görüntülüyorsunuz. Platform düğmesine dokunduğunuzda yüklü uygulamaya geçiş denenir.",
       fallbackTitle: "Uygulama açılamadı.",
       fallbackInApp: "Uygulama içi tarayıcı {platform} uygulamasına geçişi engellemiş olabilir.",
       fallbackOther: "Uygulama yüklü olmayabilir veya işletim sistemi geçişi engellemiş olabilir.",
       retry: "{platform} Uygulamasını Tekrar Dene",
       continueWeb: "Web’de Devam Et",
-      browserHelp: "Hâlâ buradaysanız Instagram’da ⋮ menüsüne dokunup “Harici tarayıcıda aç” seçeneğini seçin; ardından platforma tekrar dokunun.",
+      browserHelp: "Hâlâ buradaysanız tarayıcı menüsünden harici tarayıcıda açın ve tekrar deneyin.",
       disclaimer: "Kurgusal karakter analizi eğitim ve eğlence amaçlıdır; ruh sağlığı tavsiyesi değildir.",
-      privacy: "Reklam çerezi yok · Anonim kullanım ölçümü",
-      geoPrivacy: "Ülke bilgisi yalnızca başlangıç TR/EN dilini seçmek için kullanılır.",
+      privacy: "Reklam çerezi yok · Dil tercihi cihazda saklanır",
+      geoPrivacy: "Ülke tespiti yalnızca birinci taraf gizlilik uç noktası etkin olduğunda kullanılır.",
+      privacyLink: "Gizlilik",
       shareOpened: "Paylaşım menüsü açıldı.",
       linkCopied: "Bağlantı kopyalandı.",
       copyFailed: "Kopyalama başarısız oldu. Tarayıcıdaki adresi kullanın."
@@ -101,20 +107,12 @@
   };
   const format = (template, platform) => template.replace("{platform}", platform);
 
-  const trackEvent = (action, key) => {
-    const safeAction = String(action).toLowerCase().replace(/[^a-z0-9_-]/g, "-").slice(0, 64);
-    const safeKey = String(key).toLowerCase().replace(/[^a-z0-9_-]/g, "-").slice(0, 96);
-    if (!safeAction || !safeKey) return;
-
-    const url = `${ANALYTICS_BASE}/${encodeURIComponent(ANALYTICS_NAMESPACE)}/${encodeURIComponent(safeAction)}/${encodeURIComponent(safeKey)}?trackOnly=true`;
-    fetch(url, { method: "GET", mode: "cors", credentials: "omit", cache: "no-store", keepalive: true }).catch(() => {});
-  };
-
   const normalizeSource = value => {
     const source = String(value || "").trim().toLowerCase();
     if (["ig", "instagram"].includes(source)) return "instagram";
     if (["tt", "tiktok"].includes(source)) return "tiktok";
     if (["yt", "youtube"].includes(source)) return "youtube";
+    if (["fb", "facebook"].includes(source)) return "facebook";
     if (["direct", "none"].includes(source)) return "direct";
     return "";
   };
@@ -122,18 +120,43 @@
   const detectSource = () => {
     const explicit = normalizeSource(params.get("src") || params.get("utm_source"));
     if (explicit) return explicit;
-    if (/Instagram|FBAN|FBAV/i.test(userAgent)) return "instagram";
+    if (/Instagram/i.test(userAgent)) return "instagram";
     if (/TikTok|musical_ly|BytedanceWebview/i.test(userAgent)) return "tiktok";
     if (/YouTube/i.test(userAgent)) return "youtube";
+    if (/FBAN|FBAV/i.test(userAgent)) return "facebook";
 
     const referrer = (document.referrer || "").toLowerCase();
     if (referrer.includes("instagram.com")) return "instagram";
     if (referrer.includes("tiktok.com")) return "tiktok";
     if (referrer.includes("youtube.com") || referrer.includes("youtu.be")) return "youtube";
+    if (referrer.includes("facebook.com") || referrer.includes("fb.com")) return "facebook";
     return referrer ? "other" : "direct";
   };
 
   const source = detectSource();
+  const isFallbackReturn = ["youtube", "instagram", "tiktok"].includes(params.get("fallback") || "");
+
+  const sendEvent = (action, key) => {
+    if (!analyticsEndpoint) return;
+    const safeAction = String(action).toLowerCase().replace(/[^a-z0-9_-]/g, "-").slice(0, 64);
+    const safeKey = String(key).toLowerCase().replace(/[^a-z0-9_-]/g, "-").slice(0, 96);
+    if (!safeAction || !safeKey) return;
+    const payload = JSON.stringify({ action: safeAction, key: safeKey });
+    try {
+      if (navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: "application/json" });
+        if (navigator.sendBeacon(analyticsEndpoint, blob)) return;
+      }
+    } catch (_) {}
+    fetch(analyticsEndpoint, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: payload,
+      credentials: "omit",
+      cache: "no-store",
+      keepalive: true
+    }).catch(() => {});
+  };
 
   const applyLanguage = (language, { persist = false, trackSwitch = false } = {}) => {
     const nextLanguage = language === "tr" ? "tr" : "en";
@@ -145,6 +168,8 @@
       button.setAttribute("aria-pressed", button.dataset.language === nextLanguage ? "true" : "false");
     });
 
+    profileTitle.textContent = t("brand");
+    document.title = t("pageTitle");
     text(".eyebrow", "officialLinks");
     text(".share-label", "share");
     shareButton.setAttribute("aria-label", t("shareAria"));
@@ -176,14 +201,13 @@
     text("#footer-disclaimer", "disclaimer");
     text("#privacy-note", "privacy");
     text("#geo-privacy", "geoPrivacy");
-
-    document.title = nextLanguage === "tr" ? "Multiversal Therapy | Resmî Bağlantılar" : "Multiversal Therapy | Official Links";
+    text("#privacy-link", "privacyLink");
 
     if (persist) {
       try { localStorage.setItem("mt-language", nextLanguage); } catch (_) {}
     }
     if (trackSwitch && previousLanguage !== nextLanguage) {
-      trackEvent("language_switch", `${previousLanguage}_to_${nextLanguage}`);
+      sendEvent("language_switch", `${previousLanguage}_to_${nextLanguage}`);
     }
   };
 
@@ -197,12 +221,21 @@
   };
 
   const fetchCountry = async () => {
+    if (!contextEndpoint) return "";
     const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 1400);
+    const timeout = window.setTimeout(() => controller.abort(), 1200);
     try {
-      const response = await fetch("https://ipapi.co/country/", { method: "GET", mode: "cors", credentials: "omit", cache: "no-store", signal: controller.signal });
-      if (!response.ok) throw new Error("Country lookup failed");
-      return (await response.text()).trim().toUpperCase();
+      const response = await fetch(contextEndpoint, {
+        method: "GET",
+        credentials: "omit",
+        cache: "no-store",
+        signal: controller.signal
+      });
+      if (!response.ok) return "";
+      const data = await response.json();
+      return String(data.country || "").trim().toUpperCase();
+    } catch (_) {
+      return "";
     } finally {
       window.clearTimeout(timeout);
     }
@@ -221,22 +254,22 @@
       return saved;
     }
 
-    try {
-      const country = await fetchCountry();
+    const country = await fetchCountry();
+    if (country) {
       const language = country === "TR" ? "tr" : "en";
       applyLanguage(language);
       return language;
-    } catch (_) {
-      const language = (navigator.language || "").toLowerCase().startsWith("tr") ? "tr" : "en";
-      applyLanguage(language);
-      return language;
     }
+
+    const language = (navigator.language || "").toLowerCase().startsWith("tr") ? "tr" : "en";
+    applyLanguage(language);
+    return language;
   };
 
   const createFallbackUrl = platform => {
     const url = new URL(CANONICAL_URL);
     url.searchParams.set("fallback", platform);
-    if (source !== "direct" && source !== "other") url.searchParams.set("src", source);
+    if (!["direct", "other"].includes(source)) url.searchParams.set("src", source);
     if (currentLanguage === "tr") url.searchParams.set("lang", "tr");
     return url.href;
   };
@@ -248,22 +281,32 @@
     return `intent://${target}#Intent;scheme=${scheme};package=${packageName};S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
   };
 
-  const buildRoutes = () => {
-    const youtubeWeb = `https://www.youtube.com/channel/${YOUTUBE_CHANNEL_ID}`;
-    const youtubeDeep = `vnd.youtube://${youtubeWeb.slice("https://".length)}?feature=applinks`;
-    const instagramWeb = "https://www.instagram.com/multiversaltherapy/";
-    const instagramDeep = "instagram://user?username=multiversaltherapy";
-    const tiktokWeb = "https://www.tiktok.com/@multiversaltherapy";
-    const tiktokDeep = `snssdk1233://user/profile/${TIKTOK_USER_ID}?params_url=${encodeURIComponent(tiktokWeb)}&refer=web`;
-
-    return {
-      youtube: { name: "YouTube", web: youtubeWeb, deep: youtubeDeep, android: androidIntent(youtubeDeep, "com.google.android.youtube", createFallbackUrl("youtube")) },
-      instagram: { name: "Instagram", web: instagramWeb, deep: instagramDeep, android: androidIntent(instagramDeep, "com.instagram.android", createFallbackUrl("instagram")) },
-      tiktok: { name: "TikTok", web: tiktokWeb, deep: tiktokDeep, android: androidIntent(tiktokDeep, "com.zhiliaoapp.musically", createFallbackUrl("tiktok")) }
-    };
+  const routes = {
+    youtube: {
+      name: "YouTube",
+      web: "https://www.youtube.com/@multiversaltherapy",
+      deep: "vnd.youtube://www.youtube.com/@multiversaltherapy?feature=applinks",
+      androidPackage: "com.google.android.youtube"
+    },
+    instagram: {
+      name: "Instagram",
+      web: "https://www.instagram.com/multiversaltherapy/",
+      deep: "instagram://user?username=multiversaltherapy",
+      androidPackage: "com.instagram.android"
+    },
+    tiktok: {
+      name: "TikTok",
+      web: "https://www.tiktok.com/@multiversaltherapy",
+      deep: "snssdk1233://user/profile/7662102949010785301?refer=web",
+      androidPackage: "com.zhiliaoapp.musically"
+    }
   };
 
-  const targetForDevice = route => isAndroid ? route.android : (isIOS ? route.deep : route.web);
+  const targetForDevice = (platform, route) => {
+    if (isAndroid) return androidIntent(route.deep, route.androidPackage, createFallbackUrl(platform));
+    if (isIOS) return route.deep;
+    return route.web;
+  };
 
   const clearFallbackTimer = () => {
     if (!fallbackTimer) return;
@@ -271,27 +314,28 @@
     fallbackTimer = 0;
   };
 
-  const showFallback = route => {
+  const showFallback = (platform, route, { track = true } = {}) => {
     clearFallbackTimer();
     fallbackTitle.textContent = `${t("fallbackTitle").replace(/\.$/, "")} — ${route.name}`;
     fallbackCopy.textContent = isInAppBrowser ? format(t("fallbackInApp"), route.name) : t("fallbackOther");
-    retryAppLink.href = targetForDevice(route);
+    retryAppLink.href = targetForDevice(platform, route);
+    retryAppLink.dataset.platform = platform;
     retryAppLink.textContent = format(t("retry"), route.name);
     openWebLink.href = route.web;
     openWebLink.textContent = t("continueWeb");
     externalBrowserHelp.textContent = t("browserHelp");
     externalBrowserHelp.hidden = !isInAppBrowser;
     fallbackPanel.hidden = false;
-    trackEvent("app_fallback", route.name.toLowerCase());
+    if (track) sendEvent("app_fallback", platform);
   };
 
-  const prepareAppAttempt = route => {
+  const prepareAppAttempt = (platform, route) => {
     clearFallbackTimer();
     fallbackPanel.hidden = true;
-    retryAppLink.href = targetForDevice(route);
+    retryAppLink.href = targetForDevice(platform, route);
     openWebLink.href = route.web;
     fallbackTimer = window.setTimeout(() => {
-      if (!document.hidden) showFallback(route);
+      if (!document.hidden) showFallback(platform, route);
     }, 1600);
   };
 
@@ -316,14 +360,16 @@
     if (!copied) throw new Error("Clipboard fallback failed");
   };
 
-  const wireEvents = routes => {
+  const wireEvents = () => {
     languageButtons.forEach(button => {
-      button.addEventListener("click", () => applyLanguage(button.dataset.language, { persist: true, trackSwitch: true }));
+      button.addEventListener("click", () => {
+        applyLanguage(button.dataset.language, { persist: true, trackSwitch: true });
+      });
     });
 
     shareButton.addEventListener("click", async () => {
-      trackEvent("click", "share");
-      const shareData = { title: "Multiversal Therapy", text: t("tagline"), url: CANONICAL_URL };
+      sendEvent("click", "share");
+      const shareData = { title: t("brand"), text: t("tagline"), url: CANONICAL_URL };
       try {
         if (navigator.share) {
           await navigator.share(shareData);
@@ -343,11 +389,11 @@
       const platform = link.dataset.platform;
       const route = routes[platform];
       if (!route) return;
-      link.href = targetForDevice(route);
+      link.href = targetForDevice(platform, route);
       link.addEventListener("click", () => {
-        trackEvent("click", platform);
-        retryAppLink.dataset.platform = platform;
-        if (isMobile) prepareAppAttempt(route);
+        sendEvent("click", platform);
+        link.href = targetForDevice(platform, route);
+        if (isMobile) prepareAppAttempt(platform, route);
       });
     });
 
@@ -355,29 +401,33 @@
       const platform = retryAppLink.dataset.platform;
       const route = routes[platform];
       if (!route) return;
-      trackEvent("retry_app", platform);
-      if (isMobile) prepareAppAttempt(route);
+      sendEvent("retry_app", platform);
+      retryAppLink.href = targetForDevice(platform, route);
+      if (isMobile) prepareAppAttempt(platform, route);
     });
   };
 
   const initialize = async () => {
-    const initialLanguage = await chooseInitialLanguage();
-    const routes = buildRoutes();
-    wireEvents(routes);
+    wireEvents();
     inAppNote.hidden = !isInAppBrowser;
-
-    trackEvent("page_view", "home");
-    trackEvent("source", source);
-    trackEvent("language", initialLanguage);
 
     const requestedFallback = params.get("fallback") || "";
     if (Object.prototype.hasOwnProperty.call(routes, requestedFallback)) {
-      retryAppLink.dataset.platform = requestedFallback;
-      showFallback(routes[requestedFallback]);
+      showFallback(requestedFallback, routes[requestedFallback], { track: true });
+    }
+
+    const initialLanguage = await chooseInitialLanguage();
+
+    if (!isFallbackReturn) {
+      sendEvent("page_view", "home");
+      sendEvent("source", source);
+      sendEvent("language", initialLanguage);
     }
   };
 
   initialize();
   window.addEventListener("pagehide", clearFallbackTimer);
-  document.addEventListener("visibilitychange", () => { if (document.hidden) clearFallbackTimer(); });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) clearFallbackTimer();
+  });
 })();

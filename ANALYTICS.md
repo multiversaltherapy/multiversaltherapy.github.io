@@ -1,6 +1,12 @@
 # Link Bio Analytics
 
-The public Link Bio UI does not display analytics. Anonymous aggregate events are sent to CounterAPI under the namespace `multiversaltherapy.github.io`.
+The public Link Bio UI does not display an analytics dashboard.
+
+## Current frontend contract
+
+The browser sends events **only if** `mt-analytics-endpoint` is configured in `index.html`. It requests country context **only if** `mt-context-endpoint` is configured. On the default `github.io` deployment these endpoints may remain empty until the first-party backend is connected; in that state no analytics or IP-geolocation request is sent.
+
+No analytics read credential is ever embedded in frontend JavaScript.
 
 ## Event schema
 
@@ -8,36 +14,34 @@ The public Link Bio UI does not display analytics. Anonymous aggregate events ar
 |---|---|
 | `page_view` | `home` |
 | `click` | `youtube`, `instagram`, `tiktok`, `share` |
-| `source` | `instagram`, `tiktok`, `youtube`, `direct`, `other` |
+| `source` | `instagram`, `tiktok`, `youtube`, `facebook`, `direct`, `other` |
 | `language` | `tr`, `en` |
 | `language_switch` | `en_to_tr`, `tr_to_en` |
 | `app_fallback` | `youtube`, `instagram`, `tiktok` |
 | `retry_app` | `youtube`, `instagram`, `tiktok` |
 
-CounterAPI supports read-only totals, timelines and unique-user aggregation. Unique-user counts are approximate anonymous aggregates rather than authenticated identities.
+A fallback return (`?fallback=...`) is part of the original navigation attempt and does not create another `page_view`, `source` or `language` event.
 
 ## Source attribution
 
-Source detection order:
-
-1. `?src=` or `?utm_source=` query parameter.
-2. Known Instagram/TikTok/YouTube in-app user agent.
-3. HTTP referrer when available.
+1. `?src=` or `?utm_source=`.
+2. Known Instagram/TikTok/YouTube/Facebook in-app user agent.
+3. Incoming referrer when available.
 4. `direct` or `other` fallback.
 
-For exact per-profile attribution, these URL forms are supported without changing the page shown to visitors:
+Recommended profile URLs:
 
 - Instagram: `https://multiversaltherapy.github.io/?src=instagram`
 - TikTok: `https://multiversaltherapy.github.io/?src=tiktok`
 - YouTube: `https://multiversaltherapy.github.io/?src=youtube`
 
-## Localization
+## First-party backend
 
-Initial language selection:
+The prepared Cloudflare Worker in `cloudflare/` provides:
 
-1. Explicit `?lang=tr` or `?lang=en`.
-2. Visitor's saved manual TR/EN choice.
-3. IP country lookup: `TR` => Turkish, all other countries => English.
-4. Browser language only as a fallback when country lookup is unavailable.
+- `GET /api/context` → country code from Cloudflare request metadata.
+- `POST /api/event` → validated aggregate event writes to Workers Analytics Engine.
+- No browser-visible read token.
+- Origin allow-list and strict action/key validation.
 
-No video metadata, latest-video sync, character library, voting, countdown or YouTube content automation is part of this Link Bio.
+See `cloudflare/README.md` for deployment and retention notes.
