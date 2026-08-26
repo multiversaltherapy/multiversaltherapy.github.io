@@ -32,4 +32,4 @@ Read a counter without incrementing it:
 https://counterapi.com/api/multiversaltherapy.github.io/page_view/home?readOnly=true
 ```
 
-For an end-to-end test, read the relevant counters first, load the page once with a known `?lang=` and `?src=`, trigger the intended control, then read the same counters again. A one-step increase confirms the event path; remember that these public counters are not protected against synthetic requests.
+For an end-to-end test, read the relevant counters first, load the page once with a known `?lang=` and `?src=`, trigger the intended control, then read the same counters again. A one-step increase is positive confirmation, but no increase from a repeated client is inconclusive: during the 2026-08-26 verification, CounterAPI acknowledged test writes while some immediate `readOnly` values remained unchanged. Treat the figures as delayed, deduplicated or eventually consistent provider output—not an exact event ledger.
