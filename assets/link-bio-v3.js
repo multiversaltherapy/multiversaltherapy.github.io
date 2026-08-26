@@ -9,8 +9,6 @@
     || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   const isMobile = isAndroid || isIOS;
   const isInAppBrowser = /Instagram|FBAN|FBAV|TikTok|musical_ly|BytedanceWebview/i.test(userAgent);
-  const analyticsEndpoint = document.querySelector('meta[name="mt-analytics-endpoint"]')?.content?.trim() || "";
-  const contextEndpoint = document.querySelector('meta[name="mt-context-endpoint"]')?.content?.trim() || "";
 
   const languageButtons = Array.from(document.querySelectorAll(".language-button[data-language]"));
   const shareButton = document.getElementById("share-button");
@@ -56,8 +54,7 @@
       continueWeb: "Continue on Web",
       browserHelp: "Still here? Use the browser menu to open this page in your external browser, then try again.",
       disclaimer: "Fictional character analysis for education and entertainment — not mental-health advice.",
-      privacy: "No ad cookies · Local language preference",
-      geoPrivacy: "Country detection is used only when the first-party privacy endpoint is enabled.",
+      privacy: "No ad cookies · No analytics tracking · Local language preference",
       privacyLink: "Privacy",
       shareOpened: "Share menu opened.",
       linkCopied: "Link copied.",
@@ -91,8 +88,7 @@
       continueWeb: "Web’de Devam Et",
       browserHelp: "Hâlâ buradaysanız tarayıcı menüsünden harici tarayıcıda açın ve tekrar deneyin.",
       disclaimer: "Kurgusal karakter analizi eğitim ve eğlence amaçlıdır; ruh sağlığı tavsiyesi değildir.",
-      privacy: "Reklam çerezi yok · Dil tercihi cihazda saklanır",
-      geoPrivacy: "Ülke tespiti yalnızca birinci taraf gizlilik uç noktası etkin olduğunda kullanılır.",
+      privacy: "Reklam çerezi yok · Analytics takibi yok · Dil tercihi cihazda saklanır",
       privacyLink: "Gizlilik",
       shareOpened: "Paylaşım menüsü açıldı.",
       linkCopied: "Bağlantı kopyalandı.",
@@ -107,60 +103,8 @@
   };
   const format = (template, platform) => template.replace("{platform}", platform);
 
-  const normalizeSource = value => {
-    const source = String(value || "").trim().toLowerCase();
-    if (["ig", "instagram"].includes(source)) return "instagram";
-    if (["tt", "tiktok"].includes(source)) return "tiktok";
-    if (["yt", "youtube"].includes(source)) return "youtube";
-    if (["fb", "facebook"].includes(source)) return "facebook";
-    if (["direct", "none"].includes(source)) return "direct";
-    return "";
-  };
-
-  const detectSource = () => {
-    const explicit = normalizeSource(params.get("src") || params.get("utm_source"));
-    if (explicit) return explicit;
-    if (/Instagram/i.test(userAgent)) return "instagram";
-    if (/TikTok|musical_ly|BytedanceWebview/i.test(userAgent)) return "tiktok";
-    if (/YouTube/i.test(userAgent)) return "youtube";
-    if (/FBAN|FBAV/i.test(userAgent)) return "facebook";
-
-    const referrer = (document.referrer || "").toLowerCase();
-    if (referrer.includes("instagram.com")) return "instagram";
-    if (referrer.includes("tiktok.com")) return "tiktok";
-    if (referrer.includes("youtube.com") || referrer.includes("youtu.be")) return "youtube";
-    if (referrer.includes("facebook.com") || referrer.includes("fb.com")) return "facebook";
-    return referrer ? "other" : "direct";
-  };
-
-  const source = detectSource();
-  const isFallbackReturn = ["youtube", "instagram", "tiktok"].includes(params.get("fallback") || "");
-
-  const sendEvent = (action, key) => {
-    if (!analyticsEndpoint) return;
-    const safeAction = String(action).toLowerCase().replace(/[^a-z0-9_-]/g, "-").slice(0, 64);
-    const safeKey = String(key).toLowerCase().replace(/[^a-z0-9_-]/g, "-").slice(0, 96);
-    if (!safeAction || !safeKey) return;
-    const payload = JSON.stringify({ action: safeAction, key: safeKey });
-    try {
-      if (navigator.sendBeacon) {
-        const blob = new Blob([payload], { type: "application/json" });
-        if (navigator.sendBeacon(analyticsEndpoint, blob)) return;
-      }
-    } catch (_) {}
-    fetch(analyticsEndpoint, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: payload,
-      credentials: "omit",
-      cache: "no-store",
-      keepalive: true
-    }).catch(() => {});
-  };
-
-  const applyLanguage = (language, { persist = false, trackSwitch = false } = {}) => {
+  const applyLanguage = (language, { persist = false } = {}) => {
     const nextLanguage = language === "tr" ? "tr" : "en";
-    const previousLanguage = currentLanguage;
     currentLanguage = nextLanguage;
     document.documentElement.lang = nextLanguage;
 
@@ -200,14 +144,10 @@
     text("#external-browser-help", "browserHelp");
     text("#footer-disclaimer", "disclaimer");
     text("#privacy-note", "privacy");
-    text("#geo-privacy", "geoPrivacy");
     text("#privacy-link", "privacyLink");
 
     if (persist) {
       try { localStorage.setItem("mt-language", nextLanguage); } catch (_) {}
-    }
-    if (trackSwitch && previousLanguage !== nextLanguage) {
-      sendEvent("language_switch", `${previousLanguage}_to_${nextLanguage}`);
     }
   };
 
@@ -220,56 +160,19 @@
     }
   };
 
-  const fetchCountry = async () => {
-    if (!contextEndpoint) return "";
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 1200);
-    try {
-      const response = await fetch(contextEndpoint, {
-        method: "GET",
-        credentials: "omit",
-        cache: "no-store",
-        signal: controller.signal
-      });
-      if (!response.ok) return "";
-      const data = await response.json();
-      return String(data.country || "").trim().toUpperCase();
-    } catch (_) {
-      return "";
-    } finally {
-      window.clearTimeout(timeout);
-    }
-  };
-
-  const chooseInitialLanguage = async () => {
+  const chooseInitialLanguage = () => {
     const explicit = params.get("lang");
-    if (explicit === "tr" || explicit === "en") {
-      applyLanguage(explicit);
-      return explicit;
-    }
+    if (explicit === "tr" || explicit === "en") return explicit;
 
     const saved = savedLanguage();
-    if (saved) {
-      applyLanguage(saved);
-      return saved;
-    }
+    if (saved) return saved;
 
-    const country = await fetchCountry();
-    if (country) {
-      const language = country === "TR" ? "tr" : "en";
-      applyLanguage(language);
-      return language;
-    }
-
-    const language = (navigator.language || "").toLowerCase().startsWith("tr") ? "tr" : "en";
-    applyLanguage(language);
-    return language;
+    return (navigator.language || "").toLowerCase().startsWith("tr") ? "tr" : "en";
   };
 
   const createFallbackUrl = platform => {
     const url = new URL(CANONICAL_URL);
     url.searchParams.set("fallback", platform);
-    if (!["direct", "other"].includes(source)) url.searchParams.set("src", source);
     if (currentLanguage === "tr") url.searchParams.set("lang", "tr");
     return url.href;
   };
@@ -314,7 +217,7 @@
     fallbackTimer = 0;
   };
 
-  const showFallback = (platform, route, { track = true } = {}) => {
+  const showFallback = (platform, route) => {
     clearFallbackTimer();
     fallbackTitle.textContent = `${t("fallbackTitle").replace(/\.$/, "")} — ${route.name}`;
     fallbackCopy.textContent = isInAppBrowser ? format(t("fallbackInApp"), route.name) : t("fallbackOther");
@@ -326,7 +229,6 @@
     externalBrowserHelp.textContent = t("browserHelp");
     externalBrowserHelp.hidden = !isInAppBrowser;
     fallbackPanel.hidden = false;
-    if (track) sendEvent("app_fallback", platform);
   };
 
   const prepareAppAttempt = (platform, route) => {
@@ -363,12 +265,11 @@
   const wireEvents = () => {
     languageButtons.forEach(button => {
       button.addEventListener("click", () => {
-        applyLanguage(button.dataset.language, { persist: true, trackSwitch: true });
+        applyLanguage(button.dataset.language, { persist: true });
       });
     });
 
     shareButton.addEventListener("click", async () => {
-      sendEvent("click", "share");
       const shareData = { title: t("brand"), text: t("tagline"), url: CANONICAL_URL };
       try {
         if (navigator.share) {
@@ -391,7 +292,6 @@
       if (!route) return;
       link.href = targetForDevice(platform, route);
       link.addEventListener("click", () => {
-        sendEvent("click", platform);
         link.href = targetForDevice(platform, route);
         if (isMobile) prepareAppAttempt(platform, route);
       });
@@ -401,27 +301,19 @@
       const platform = retryAppLink.dataset.platform;
       const route = routes[platform];
       if (!route) return;
-      sendEvent("retry_app", platform);
       retryAppLink.href = targetForDevice(platform, route);
       if (isMobile) prepareAppAttempt(platform, route);
     });
   };
 
-  const initialize = async () => {
+  const initialize = () => {
+    applyLanguage(chooseInitialLanguage());
     wireEvents();
     inAppNote.hidden = !isInAppBrowser;
 
     const requestedFallback = params.get("fallback") || "";
     if (Object.prototype.hasOwnProperty.call(routes, requestedFallback)) {
-      showFallback(requestedFallback, routes[requestedFallback], { track: true });
-    }
-
-    const initialLanguage = await chooseInitialLanguage();
-
-    if (!isFallbackReturn) {
-      sendEvent("page_view", "home");
-      sendEvent("source", source);
-      sendEvent("language", initialLanguage);
+      showFallback(requestedFallback, routes[requestedFallback]);
     }
   };
 
