@@ -2,13 +2,15 @@
 
 The public Link Bio UI does not display an analytics dashboard.
 
-## Current frontend contract
+## Current status
 
-The browser sends events **only if** `mt-analytics-endpoint` is configured in `index.html`. It requests country context **only if** `mt-context-endpoint` is configured. On the default `github.io` deployment these endpoints may remain empty until the first-party backend is connected; in that state no analytics or IP-geolocation request is sent.
+Analytics collection is currently **disabled**.
 
-No analytics read credential is ever embedded in frontend JavaScript.
+The browser sends events only if an analytics endpoint is explicitly configured in `index.html`. Country lookup likewise runs only if a context endpoint is configured. On the current `github.io` deployment both remain unconfigured, so no analytics or IP-geolocation request is sent.
 
-## Event schema
+No analytics read credential is embedded in frontend JavaScript. No CounterAPI, ipapi or Cloudflare runtime dependency is active.
+
+## Event schema reserved for a future approved backend
 
 | Action | Keys |
 |---|---|
@@ -20,28 +22,19 @@ No analytics read credential is ever embedded in frontend JavaScript.
 | `app_fallback` | `youtube`, `instagram`, `tiktok` |
 | `retry_app` | `youtube`, `instagram`, `tiktok` |
 
-A fallback return (`?fallback=...`) is part of the original navigation attempt and does not create another `page_view`, `source` or `language` event.
+A fallback return (`?fallback=...`) is part of the original navigation attempt and must not create another `page_view`, `source` or `language` event.
 
-## Source attribution
+## Source attribution design
 
 1. `?src=` or `?utm_source=`.
 2. Known Instagram/TikTok/YouTube/Facebook in-app user agent.
 3. Incoming referrer when available.
 4. `direct` or `other` fallback.
 
-Recommended profile URLs:
+Recommended profile URLs if analytics is enabled later:
 
 - Instagram: `https://multiversaltherapy.github.io/?src=instagram`
 - TikTok: `https://multiversaltherapy.github.io/?src=tiktok`
 - YouTube: `https://multiversaltherapy.github.io/?src=youtube`
 
-## First-party backend
-
-The prepared Cloudflare Worker in `cloudflare/` provides:
-
-- `GET /api/context` → country code from Cloudflare request metadata.
-- `POST /api/event` → validated aggregate event writes to Workers Analytics Engine.
-- No browser-visible read token.
-- Origin allow-list and strict action/key validation.
-
-See `cloudflare/README.md` for deployment and retention notes.
+Any future analytics/geo backend must be separately approved before activation.
