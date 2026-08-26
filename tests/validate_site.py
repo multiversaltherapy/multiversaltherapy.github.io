@@ -48,17 +48,18 @@ def check_images():
 def check_security():
     index=(ROOT/"index.html").read_text(encoding="utf-8")
     js=(ROOT/"assets/link-bio-v3.js").read_text(encoding="utf-8")
+    analytics_js=(ROOT/"assets/analytics-v1.js").read_text(encoding="utf-8")
     css=(ROOT/"assets/link-bio-v3.css").read_text(encoding="utf-8")
     privacy=(ROOT/"privacy.html").read_text(encoding="utf-8")
     analytics=(ROOT/"ANALYTICS.md").read_text(encoding="utf-8")
 
     forbidden_runtime=[
-        "counterapi.com", "ipapi.co", "unsafe-eval", "unsafe-inline",
-        "mt-analytics-endpoint", "mt-context-endpoint", "sendEvent(",
-        "fetchCountry", "analyticsEndpoint", "contextEndpoint"
+        "ipapi.co", "unsafe-eval", "unsafe-inline",
+        "mt-analytics-endpoint", "mt-context-endpoint",
+        "fetchCountry", "contextEndpoint"
     ]
     for item in forbidden_runtime:
-        if item in index or item in js or item in privacy:
+        if item in index or item in js or item in analytics_js or item in privacy:
             raise AssertionError(f"Forbidden runtime dependency/security token present: {item}")
 
     for path in ROOT.rglob("*"):
@@ -73,10 +74,14 @@ def check_security():
         raise AssertionError("Legacy visual/localization runtime still referenced")
     if "profile-v3-256.jpg" not in index:
         raise AssertionError("Verified v3 profile asset is not wired")
-    if "No analytics tracking" not in index:
-        raise AssertionError("UI privacy status does not state that analytics is disabled")
-    if "analytics disabled" not in analytics.lower():
-        raise AssertionError("Analytics documentation is not explicit about disabled state")
+    if "analytics-v1.js" not in index:
+        raise AssertionError("Analytics runtime is not wired")
+    if "https://counterapi.com" not in index or "counterapi.com/api" not in analytics_js:
+        raise AssertionError("CounterAPI runtime/CSP configuration is incomplete")
+    if "Anonymous usage metrics" not in index:
+        raise AssertionError("UI privacy status does not disclose anonymous metrics")
+    if "public/no-auth" not in analytics.lower():
+        raise AssertionError("Analytics integrity risk is not documented")
 
     match = re.search(r'<script type="application/ld\+json">(.*?)</script>', index, re.S)
     if not match:
@@ -94,6 +99,7 @@ def main():
         check_html(html)
     check_images(); check_security()
     subprocess.run(["node","--check",str(ROOT/"assets/link-bio-v3.js")], check=True)
+    subprocess.run(["node","--check",str(ROOT/"assets/analytics-v1.js")], check=True)
     print("Link Bio validation passed")
 
 if __name__=="__main__": main()
