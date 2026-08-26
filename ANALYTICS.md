@@ -1,27 +1,23 @@
 # Link Bio Analytics
 
-The public Link Bio currently has **analytics disabled**.
+The Link Bio uses anonymous aggregate counters for lightweight traffic analytics.
 
-## Current state
+## Current behavior
 
-- No analytics dashboard is shown to visitors.
-- No analytics event is sent from the browser.
-- No IP-geolocation request is sent.
-- No public analytics read credential is embedded in the frontend.
-- No third-party analytics or geo runtime dependency is active.
+The browser records aggregate events through CounterAPI. These counters are public/no-auth and can be manipulated by repeated or automated requests. This is an explicitly accepted integrity risk: the data is useful for directional traffic analysis, not as a tamper-proof audit log.
 
-The site still accepts normal URL parameters such as `?lang=tr` / `?lang=en` for language selection and `?fallback=` internally for app-opening fallback behavior, but these are not used for analytics collection.
+No social-media password, account credential, OAuth token or analytics read secret is stored in the frontend.
 
-## Language selection
+## Event schema
 
-Initial language priority:
+- `page_view`: `home`
+- `click`: `youtube`, `instagram`, `tiktok`, `share`
+- `source`: `instagram`, `tiktok`, `youtube`, `facebook`, `direct`, `other`
+- `language`: `tr`, `en`
+- `language_switch`: `en_to_tr`, `tr_to_en`
+- `app_fallback`: `youtube`, `instagram`, `tiktok`
+- `retry_app`: `youtube`, `instagram`, `tiktok`
 
-1. Explicit `?lang=tr` or `?lang=en` parameter.
-2. Previously saved manual TR/EN preference in local storage.
-3. Browser language (`tr*` → Turkish, otherwise English).
+Fallback returns do not create a second page view.
 
-Country/IP-based language detection is disabled.
-
-## Future analytics
-
-If analytics is reintroduced later, the implementation must be selected and approved separately before activation. At minimum it should support aggregate page views and social-button clicks without exposing a browser-side read credential or silently enabling third-party tracking.
+Country/IP based language detection remains disabled. Initial language priority is explicit `?lang=`, saved manual preference, then browser language.
