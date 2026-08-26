@@ -1,0 +1,12 @@
+name = "multiversaltherapy-linkbio"
+main = "worker.js"
+compatibility_date = "2026-08-26"
+
+[vars]
+ALLOWED_ORIGIN = "https://multiversaltherapy.github.io"
+
+[[analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "multiversaltherapy_linkbio"
+
+# Add VISITOR_SALT with: wrangler secret put VISITOR_SALT
