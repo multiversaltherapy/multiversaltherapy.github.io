@@ -92,16 +92,15 @@ def check_security():
         raise AssertionError("Analytics runtime is not wired")
     if "https://counterapi.com" not in index or "counterapi.com/api" not in analytics_js:
         raise AssertionError("CounterAPI runtime/CSP configuration is incomplete")
-    if "https://api.ipapi.is" not in index or "https://api.ipapi.is" not in js:
-        raise AssertionError("IP-country runtime/CSP configuration is incomplete")
+    for token in ["ipapi.is", "mt-auto-language", "COUNTRY_LOOKUP_URL", "detectCountryLanguage"]:
+        if token in index or token in js or token in privacy:
+            raise AssertionError(f"IP-country dependency remains: {token}")
     if "window.mtLanguageReady" not in js or "window.mtLanguageReady" not in analytics_js:
         raise AssertionError("Analytics does not wait for automatic language resolution")
     if '{ capture: true }' not in analytics_js:
         raise AssertionError("Language-switch analytics is vulnerable to observer ordering")
     if "Anonymous metrics" not in index:
         raise AssertionError("UI privacy status does not disclose anonymous metrics")
-    if "ipapi.is" not in privacy or "connection IP" not in privacy:
-        raise AssertionError("IP-country privacy disclosure is incomplete")
     if "public/no-auth" not in analytics.lower():
         raise AssertionError("Analytics integrity risk is not documented")
 

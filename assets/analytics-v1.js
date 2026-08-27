@@ -48,8 +48,8 @@
     const node = document.getElementById("privacy-note");
     if (!node) return;
     node.textContent = currentLanguage() === "tr"
-      ? "Reklam çerezi yok · Anonim ölçüm · Oturumluk IP-ülke dil seçimi"
-      : "No ad cookies · Anonymous metrics · Session-based IP-country language";
+      ? "Reklam çerezi yok · Anonim ölçüm"
+      : "No ad cookies · Anonymous metrics";
   };
 
   document.querySelectorAll(".social-link[data-platform]").forEach(link => {
